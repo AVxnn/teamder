@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import SessionProviderWrapper from './providers/SessionProviderWrapper';
-import Head from 'next/head';
+import Script from 'next/script';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -26,13 +26,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Head>
-        <script async src="https://web.telegram.org/js/telegram-web-app.js" />
-      </Head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SessionProviderWrapper>{children}</SessionProviderWrapper>
+        <Script
+          src="https://telegram.org/js/telegram-web-app.js"
+          strategy="beforeInteractive"
+        />
       </body>
     </html>
   );

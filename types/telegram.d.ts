@@ -20,5 +20,7 @@ export interface TelegramWebApp {
   initDataUnsafe: TelegramInitDataUnsafe;
   expand(): void;
   close(): void;
+  onEvent: (event: string, callback: () => void) => void;
+  ready: () => void;
   // другие методы, если нужно
 }
