@@ -1,21 +1,21 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import SessionProviderWrapper from "./providers/SessionProviderWrapper";
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+import './globals.css';
+import SessionProviderWrapper from './providers/SessionProviderWrapper';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
-export const metadata = {
-  title: "TeamDer | Приложение для поиска тиммейтов",
-  description: "TeamDer поиск тиммейтов",
+export const metadata: Metadata = {
+  title: 'TeamDer | Приложение для поиска тиммейтов',
+  description: 'TeamDer поиск тиммейтов',
 };
 
 export default function RootLayout({
