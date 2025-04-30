@@ -1,40 +1,47 @@
-"use client";
+'use client';
 
-import { authState } from "@/store/auth";
-import { useSession, signIn, signOut } from "next-auth/react";
-import { useSnapshot } from "valtio";
+import { userStore } from '@/store/user';
+import { TelegramWebApp } from '@/types/telegram';
+import { useEffect } from 'react';
+import { useSnapshot } from 'valtio';
 
-export default function Home() {
-  const { data: session } = useSession();
-  const snap = useSnapshot(authState);
-
-  console.log(snap);
-  if (session && session.user) {
-    console.log("session", session);
-    return (
-      <div className="p-4">
-        <p>Привет, {session.user.name}</p>
-        <img src={session.user.image!} className="w-16 h-16 rounded-full" />
-        <button
-          onClick={() => signOut()}
-          className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
-        >
-          Выйти
-        </button>
-      </div>
-    );
+declare global {
+  interface Window {
+    Telegram: {
+      WebApp: TelegramWebApp;
+    };
   }
+}
+
+export default function HomePage() {
+  const snap = useSnapshot(userStore);
+
+  useEffect(() => {
+    const tg = window.Telegram?.WebApp;
+    tg?.expand();
+
+    const user = tg?.initDataUnsafe?.user;
+    if (user) {
+      userStore.user.id = user.id;
+      userStore.user.first_name = user.first_name;
+      userStore.user.last_name = user.last_name;
+      userStore.user.username = user.username;
+      userStore.user.photo_url = user.photo_url;
+    }
+  }, []);
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">Добро пожаловать</h1>
-      <button
-        onClick={() => signIn("google")}
-        className="px-4 py-2 bg-blue-500 text-white rounded"
-      >
-        Войти через Google
-      </button>
-      <p className="mt-2 text-sm text-gray-500">Apple скоро будет доступен</p>
-    </div>
+    <main style={{ padding: 20 }}>
+      <h1>Привет, {snap.user.first_name || 'Гость'} 👋</h1>
+      {snap.user.photo_url && (
+        <img
+          src={snap.user.photo_url}
+          alt="avatar"
+          width={100}
+          style={{ borderRadius: '50%' }}
+        />
+      )}
+      <pre>{JSON.stringify(snap, null, 2)}</pre>
+    </main>
   );
 }
