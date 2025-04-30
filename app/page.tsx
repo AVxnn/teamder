@@ -8,8 +8,9 @@ export default function Home() {
   const { data: session } = useSession();
   const snap = useSnapshot(authState);
 
+  console.log(snap);
   if (session && session.user) {
-    authState.user = session.user || null;
+    console.log("session", session);
     return (
       <div className="p-4">
         <p>Привет, {session.user.name}</p>
