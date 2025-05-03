@@ -1,6 +1,7 @@
 'use client';
 
 import NavBar from '@/components/navbar';
+import PlayerCard from '@/components/playerCard';
 import { userStore } from '@/store/user';
 import { TelegramWebApp } from '@/types/telegram';
 import { useEffect, useState } from 'react';
@@ -47,6 +48,7 @@ export default function HomePage() {
       <div className="flex justify-center items-center !pt-[128px]">
         Привет, {snap.user.first_name || 'Гость'} 👋
       </div>
+      <PlayerCard accountId={'337647206'} />
       <NavBar />
     </main>
   );
