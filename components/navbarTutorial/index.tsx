@@ -1,0 +1,166 @@
+'use client';
+
+import ArrowLeft from '@/public/icons/ArrowLeft';
+import ArrowRight from '@/public/icons/ArrowRight';
+import TeamDer from '@/public/icons/TeamDer';
+import { userStore } from '@/store/user';
+import { AnimatePresence, motion } from 'framer-motion';
+import { usePathname } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { useSnapshot } from 'valtio';
+
+const NavBarTutorial = ({
+  currentStep,
+  handlePrev,
+  handleNext,
+}: {
+  currentStep: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  handlePrev: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  handleNext: any;
+}) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const snap = useSnapshot(userStore);
+  const pathname = usePathname();
+
+  const [animatedSteps, setAnimatedSteps] = useState<number[]>([]);
+
+  useEffect(() => {
+    // Анимация при изменении currentStep
+    if (currentStep + 1 > animatedSteps.length) {
+      // Добавляем новый шаг с анимацией
+      setAnimatedSteps((prev) => [...prev, currentStep + 1]);
+    } else if (currentStep + 1 < animatedSteps.length) {
+      // Удаляем последний шаг с анимацией
+      const timer = setTimeout(() => {
+        setAnimatedSteps((prev) => prev.slice(0, -1));
+      }, 0); // Задержка для завершения анимации исчезновения
+      return () => clearTimeout(timer);
+    }
+  }, [currentStep]);
+
+  const getActivePosition = () => {
+    switch (pathname) {
+      case '/chat':
+        return 'translate-x-0 w-[70px]';
+      case '/':
+        return 'translate-x-[80px] w-[54px]';
+      case '/profile':
+        return 'translate-x-[143px] w-[70px]';
+      default:
+        return 'translate-x-0';
+    }
+  };
+
+  return (
+    <div className="fixed flex gap-[8px] bottom-[84px] !p-[5px] left-1/2 transform -translate-x-1/2 bg-[#252525] w-[194px] h-[64px] rounded-full relative">
+      <div
+        className={`absolute h-[56px] bg-[#140A0A] rounded-full transition-all duration-300 ease ${getActivePosition()}`}
+      />
+
+      <div
+        onClick={() => handlePrev()}
+        className="w-[56px] h-[56px] flex bg-[#140A0A] items-center justify-center !rounded-full !border-solid !border-1 !border-[#363636] relative z-10"
+      >
+        <ArrowLeft />
+      </div>
+      <div className="relative w-[56px] h-[56px] overflow-hidden">
+        {/* Основной круг (фон) */}
+        <div className="absolute inset-0 bg-[#140A0A] rounded-full border border-[#363636] flex items-center justify-center z-10">
+          <TeamDer />
+        </div>
+
+        {/* SVG обводка с тремя сегментами */}
+        <svg
+          width="56"
+          height="56"
+          viewBox="0 0 56 56"
+          className="absolute top-0 left-0 z-10"
+        >
+          <AnimatePresence>
+            {/* Сегмент 1 */}
+            {animatedSteps.includes(1) && (
+              <motion.circle
+                key="segment-1"
+                cx="28"
+                cy="28"
+                r="24"
+                fill="none"
+                stroke="#7C87ED"
+                strokeWidth="3"
+                strokeLinecap="round"
+                initial={{ strokeDasharray: '0 150.8' }}
+                animate={{
+                  strokeDasharray: '50.3 100.6',
+                  strokeDashoffset: '-100.6',
+                  transition: { duration: 0.2 },
+                }}
+                exit={{
+                  strokeDasharray: '0 150.8',
+                  transition: { duration: 0.2 },
+                }}
+              />
+            )}
+
+            {/* Сегмент 2 */}
+            {animatedSteps.includes(2) && (
+              <motion.circle
+                key="segment-2"
+                cx="28"
+                cy="28"
+                r="24"
+                fill="none"
+                stroke="#7C87ED"
+                strokeWidth="3"
+                strokeLinecap="round"
+                initial={{ strokeDasharray: '0 150.8' }}
+                animate={{
+                  strokeDasharray: '50.3 100.6',
+                  strokeDashoffset: '0',
+                  transition: { duration: 0.2 },
+                }}
+                exit={{
+                  strokeDasharray: '0 150.8',
+                  transition: { duration: 0.2 },
+                }}
+              />
+            )}
+
+            {/* Сегмент 3 */}
+            {animatedSteps.includes(3) && (
+              <motion.circle
+                key="segment-3"
+                cx="28"
+                cy="28"
+                r="24"
+                fill="none"
+                stroke="#7C87ED"
+                strokeWidth="3"
+                strokeLinecap="round"
+                initial={{ strokeDasharray: '0 150.8' }}
+                animate={{
+                  strokeDasharray: '50.3 100.6',
+                  strokeDashoffset: '-50.3',
+                  transition: { duration: 0.2 },
+                }}
+                exit={{
+                  strokeDasharray: '0 150.8',
+                  transition: { duration: 0.2 },
+                }}
+              />
+            )}
+          </AnimatePresence>
+        </svg>
+      </div>
+      <div
+        onClick={() => handleNext()}
+        className="w-[56px] h-[56px] flex bg-[#140A0A] items-center justify-center !rounded-full !border-solid !border-1 !border-[#363636] relative z-10"
+      >
+        <ArrowRight />
+      </div>
+    </div>
+  );
+};
+
+export default NavBarTutorial;

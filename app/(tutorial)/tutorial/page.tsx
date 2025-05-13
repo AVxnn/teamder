@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import NavBarTutorial from '@/components/navbarTutorial';
 
 // Типы для данных обучения
 type TutorialStep = {
@@ -123,45 +124,17 @@ export default function TutorialPage() {
                 {tutorialSteps[currentStep].title}
               </h1>
               <p className="text-gray-300">
-                Описание этапа {currentStep + 1}...
+                {tutorialSteps[currentStep].description}
               </p>
             </motion.div>
           </AnimatePresence>
         </div>
-
-        {/* Навигация */}
-        <div className="pb-8 flex justify-between items-center">
-          <button
-            onClick={handlePrev}
-            disabled={currentStep === 0}
-            className={`px-6 py-3 rounded-full ${
-              currentStep === 0
-                ? 'opacity-50 cursor-default'
-                : 'hover:bg-white/10'
-            } text-white transition-all`}
-          >
-            Назад
-          </button>
-
-          <div className="flex space-x-2">
-            {tutorialSteps.map((_, index) => (
-              <div
-                key={index}
-                className={`w-2 h-2 rounded-full ${
-                  currentStep === index ? 'bg-white' : 'bg-white/30'
-                }`}
-              />
-            ))}
-          </div>
-
-          <button
-            onClick={handleNext}
-            className="px-6 py-3 bg-white text-black rounded-full hover:bg-white/90 transition-all"
-          >
-            {currentStep === tutorialSteps.length - 1 ? 'Начать' : 'Далее'}
-          </button>
-        </div>
       </div>
+      <NavBarTutorial
+        currentStep={currentStep}
+        handlePrev={handlePrev}
+        handleNext={handleNext}
+      />
     </motion.main>
   );
 }
