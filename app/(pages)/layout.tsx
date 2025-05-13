@@ -10,15 +10,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [isClient, setIsClient] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   useEffect(() => {
+    const isTutorialCompleted = localStorage.getItem('tutorial') === 'true';
+    console.log(isTutorialCompleted);
+    if (!isTutorialCompleted) {
+    } else {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
     const tg = window.Telegram?.WebApp;
     console.log(window.Telegram);
     tg?.expand();
+
+    // Можно также изменить цвет фона
+    tg.backgroundColor = '#140A0A';
+    tg.headerColor = '#140A0A';
 
     const user = tg?.initDataUnsafe?.user;
     console.log(user, 'user');
@@ -34,7 +48,7 @@ export default function RootLayout({
   return (
     <>
       {children}
-      <NavBar />
+      {!isLoading ? <NavBar /> : null}
     </>
   );
 }

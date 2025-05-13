@@ -6,6 +6,7 @@ import { TelegramWebApp } from '@/types/telegram';
 import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { useRouter } from 'next/navigation';
+import FullPageLoader from '@/components/fullPageLoader';
 
 declare global {
   interface Window {
@@ -36,15 +37,15 @@ export default function HomePage() {
   }, [router]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <FullPageLoader />;
   }
 
   if (!isClient) {
-    return <div>Loading...</div>;
+    return <FullPageLoader />;
   }
 
   return (
-    <main className="bg-gradient-to-tr from-[#05060F] to-[#0F1231] h-screen">
+    <main className="bg-gradient-to-tr from-[#05060F] to-[#0F1231] h-screen overflow-hidden relative">
       <div className="flex justify-center items-center !pt-[128px]">
         Привет, {snap.user.first_name || 'Гость'} 👋
       </div>

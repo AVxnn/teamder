@@ -2,6 +2,7 @@
 
 import ArrowLeft from '@/public/icons/ArrowLeft';
 import ArrowRight from '@/public/icons/ArrowRight';
+import Check from '@/public/icons/Check';
 import TeamDer from '@/public/icons/TeamDer';
 import { userStore } from '@/store/user';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -24,21 +25,46 @@ const NavBarTutorial = ({
   const snap = useSnapshot(userStore);
   const pathname = usePathname();
 
-  const [animatedSteps, setAnimatedSteps] = useState<number[]>([]);
+  const [animatedSteps, setAnimatedSteps] = useState<number[]>([1]);
 
   useEffect(() => {
-    // Анимация при изменении currentStep
     if (currentStep + 1 > animatedSteps.length) {
-      // Добавляем новый шаг с анимацией
       setAnimatedSteps((prev) => [...prev, currentStep + 1]);
     } else if (currentStep + 1 < animatedSteps.length) {
-      // Удаляем последний шаг с анимацией
       const timer = setTimeout(() => {
         setAnimatedSteps((prev) => prev.slice(0, -1));
-      }, 0); // Задержка для завершения анимации исчезновения
+      }, 0);
       return () => clearTimeout(timer);
     }
   }, [currentStep]);
+
+  useEffect(() => {
+    const tg = window.Telegram?.WebApp;
+    if (!tg) return;
+
+    console.log(tg.BackButton.isVisible);
+    if (!tg.BackButton.isVisible) {
+      tg.BackButton.show();
+    }
+    const handleBack = () => {
+      handlePrev();
+    };
+
+    if (currentStep + 1 === 1) {
+      tg.BackButton.offClick(handleBack);
+      tg.BackButton.hide();
+    } else {
+      tg.BackButton.onClick(handleBack);
+    }
+
+    if (currentStep + 1 > 3) {
+      tg.BackButton.hide();
+    }
+
+    return () => {
+      tg.BackButton.offClick(handleBack);
+    };
+  }, [currentStep, window.Telegram?.WebApp]);
 
   const getActivePosition = () => {
     switch (pathname) {
@@ -54,16 +80,24 @@ const NavBarTutorial = ({
   };
 
   return (
-    <div className="fixed flex gap-[8px] bottom-[84px] !p-[5px] left-1/2 transform -translate-x-1/2 bg-[#252525] w-[194px] h-[64px] rounded-full relative">
+    <div className="fixed flex gap-[8px] bottom-[100px] !p-[5px] left-1/2 transform -translate-x-1/2 bg-[#252525] w-[194px] h-[64px] rounded-full relative">
       <div
         className={`absolute h-[56px] bg-[#140A0A] rounded-full transition-all duration-300 ease ${getActivePosition()}`}
       />
-
       <div
-        onClick={() => handlePrev()}
-        className="w-[56px] h-[56px] flex bg-[#140A0A] items-center justify-center !rounded-full !border-solid !border-1 !border-[#363636] relative z-10"
+        onClick={() => {
+          if (window.Telegram?.WebApp?.HapticFeedback && currentStep + 1 >= 2) {
+            window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+          }
+          handlePrev();
+        }}
+        className="w-[56px] h-[56px] flex bg-[#140A0A] items-center justify-center rounded-full border border-solid border-[#363636] relative z-10
+    active:scale-95 transform transition-transform duration-15 ease-in-out
+    hover:brightness-110 cursor-pointer active:opacity-90"
       >
-        <ArrowLeft />
+        <div className="active:scale-90 transition-transform duration-15">
+          <ArrowLeft />
+        </div>
       </div>
       <div className="relative w-[56px] h-[56px] overflow-hidden">
         {/* Основной круг (фон) */}
@@ -154,10 +188,20 @@ const NavBarTutorial = ({
         </svg>
       </div>
       <div
-        onClick={() => handleNext()}
-        className="w-[56px] h-[56px] flex bg-[#140A0A] items-center justify-center !rounded-full !border-solid !border-1 !border-[#363636] relative z-10"
+        onClick={() => {
+          if (window.Telegram?.WebApp?.HapticFeedback) {
+            window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+          }
+          handleNext();
+        }}
+        className={`w-[56px] h-[56px] flex items-center justify-center rounded-full border border-solid border-[#363636] relative z-10
+    active:scale-95 transform transition-transform duration-15 ease-in-out
+    hover:brightness-110 cursor-pointer active:opacity-90 
+    ${currentStep + 1 === 3 ? 'bg-[#7C87ED]' : 'bg-[#140A0A]'}`}
       >
-        <ArrowRight />
+        <div className="active:scale-90 transition-transform duration-15">
+          {currentStep + 1 === 3 ? <Check /> : <ArrowRight />}
+        </div>
       </div>
     </div>
   );

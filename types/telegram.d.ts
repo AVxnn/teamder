@@ -20,6 +20,18 @@ export interface TelegramWebApp {
   initDataUnsafe: TelegramInitDataUnsafe;
   expand(): void;
   close(): void;
+  backgroundColor: string;
+  headerColor: string;
+  BackButton: {
+    isVisible: boolean;
+    show: () => void;
+    hide: () => void;
+    onClick: (callback: () => void) => void;
+    offClick: (callback: () => void) => void;
+  };
+  HapticFeedback: {
+    impactOccurred: (style: 'light' | 'medium' | 'heavy') => void;
+  };
   onEvent: (event: string, callback: () => void) => void;
   ready: () => void;
   // другие методы, если нужно

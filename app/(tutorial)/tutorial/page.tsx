@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import NavBarTutorial from '@/components/navbarTutorial';
 
-// Типы для данных обучения
 type TutorialStep = {
   id: number;
   title: string;
@@ -17,7 +16,7 @@ type TutorialStep = {
 
 export default function TutorialPage() {
   const router = useRouter();
-  // Данные для каждого этапа обучения
+
   const tutorialSteps: TutorialStep[] = [
     {
       id: 1,
@@ -48,19 +47,21 @@ export default function TutorialPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [direction, setDirection] = useState<'left' | 'right'>('right');
 
-  // Обработчик кнопки "Далее"
   const handleNext = () => {
     if (currentStep < tutorialSteps.length - 1) {
       setDirection('right');
       setCurrentStep(currentStep + 1);
     } else {
-      // Завершение обучения
+      const tg = window.Telegram?.WebApp;
+
+      if (!tg.BackButton.isVisible) {
+        tg.BackButton.hide();
+      }
       localStorage.setItem('tutorial', 'true');
       router.push('/');
     }
   };
 
-  // Обработчик кнопки "Назад"
   const handlePrev = () => {
     if (currentStep > 0) {
       setDirection('left');
@@ -68,7 +69,6 @@ export default function TutorialPage() {
     }
   };
 
-  // Анимация для контента
   const contentVariants = {
     enter: (direction: 'left' | 'right') => ({
       x: direction === 'right' ? 100 : -100,
@@ -97,10 +97,10 @@ export default function TutorialPage() {
     >
       <div className="container mx-auto !px-6 !py-8 h-full flex flex-col">
         {/* Контент с анимацией */}
-        <div className="flex m-8 justify-center relative">
+        <div className="flex justify-center relative">
           <h1 className="text-3xl">Teamder</h1>
         </div>
-        <div className="flex-1 flex items-center justify-center relative">
+        <div className="flex-1 !mt-[-32px] flex items-center justify-center relative">
           <AnimatePresence custom={direction} mode="wait">
             <motion.div
               key={tutorialSteps[currentStep].id}
@@ -120,7 +120,7 @@ export default function TutorialPage() {
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.35 }}
               />
-              <h1 className="text-2xl !mt-16 font-bold text-white mb-4">
+              <h1 className="text-2xl !mt-8 font-bold text-white mb-4">
                 {tutorialSteps[currentStep].title}
               </h1>
               <p className="text-gray-300">
