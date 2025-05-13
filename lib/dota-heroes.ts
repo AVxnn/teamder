@@ -10,7 +10,6 @@ interface HeroInfo {
 let heroesCache: HeroInfo[] | null = null;
 
 export async function getHeroInfo(heroId: {win: number, games: number, hero_id: number}) {
-  console.log(heroId)
   if (!heroesCache) {
     const response = await fetch('https://api.opendota.com/api/heroes');
     const data = await response.json();

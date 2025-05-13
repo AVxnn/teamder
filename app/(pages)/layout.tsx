@@ -1,22 +1,14 @@
 'use client';
 
 import NavBar from '@/components/navbar';
-import PlayerCard from '@/components/playerCard';
 import { userStore } from '@/store/user';
-import { TelegramWebApp } from '@/types/telegram';
 import { useEffect, useState } from 'react';
-import { useSnapshot } from 'valtio';
 
-declare global {
-  interface Window {
-    Telegram: {
-      WebApp: TelegramWebApp;
-    };
-  }
-}
-
-export default function HomePage() {
-  const snap = useSnapshot(userStore);
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -29,7 +21,7 @@ export default function HomePage() {
     tg?.expand();
 
     const user = tg?.initDataUnsafe?.user;
-    console.log(user, 'user', tg);
+    console.log(user, 'user');
     if (isClient && user) {
       userStore.user.id = user.id;
       userStore.user.first_name = user.first_name;
@@ -39,17 +31,10 @@ export default function HomePage() {
     }
   }, [isClient]);
 
-  if (!isClient) {
-    return <div>Loading...</div>;
-  }
-
   return (
-    <main className="bg-gradient-to-tr from-[#05060F] to-[#0F1231] h-screen">
-      <div className="flex justify-center items-center !pt-[128px]">
-        Привет, {snap.user.first_name || 'Гость'} 👋
-      </div>
-      <PlayerCard accountId={'337647206'} />
+    <>
+      {children}
       <NavBar />
-    </main>
+    </>
   );
 }
