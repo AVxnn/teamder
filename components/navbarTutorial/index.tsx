@@ -1,11 +1,13 @@
 'use client';
 
+import useTelegramWebApp from '@/hooks/useTelegramWebApp';
 import ArrowLeft from '@/public/icons/ArrowLeft';
 import ArrowRight from '@/public/icons/ArrowRight';
 import Check from '@/public/icons/Check';
 import TeamDer from '@/public/icons/TeamDer';
 import { userStore } from '@/store/user';
 import { AnimatePresence, motion } from 'framer-motion';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
@@ -24,6 +26,7 @@ const NavBarTutorial = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const snap = useSnapshot(userStore);
   const pathname = usePathname();
+  const tgWebApp = useTelegramWebApp();
 
   const [animatedSteps, setAnimatedSteps] = useState<number[]>([1]);
 
@@ -36,31 +39,30 @@ const NavBarTutorial = ({
       }, 0);
       return () => clearTimeout(timer);
     }
-  }, [currentStep]);
+  }, [animatedSteps.length, currentStep]);
 
   useEffect(() => {
-    const tg = window.Telegram?.WebApp;
-    if (!tg) return;
+    if (!tgWebApp) return;
 
-    console.log(tg.BackButton.isVisible);
-    if (!tg.BackButton.isVisible && currentStep + 1 !== 1) {
-      tg.BackButton.show();
+    console.log(tgWebApp.BackButton.isVisible);
+    if (!tgWebApp.BackButton.isVisible && currentStep + 1 !== 1) {
+      tgWebApp.BackButton.show();
     }
     const handleBack = () => {
       handlePrev();
     };
 
     if (currentStep + 1 === 1) {
-      tg.BackButton.offClick(handleBack);
-      tg.BackButton.hide();
+      tgWebApp.BackButton.offClick(handleBack);
+      tgWebApp.BackButton.hide();
     } else {
-      tg.BackButton.onClick(handleBack);
+      tgWebApp.BackButton.onClick(handleBack);
     }
 
     return () => {
-      tg.BackButton.offClick(handleBack);
+      tgWebApp.BackButton.offClick(handleBack);
     };
-  }, [currentStep, window.Telegram?.WebApp]);
+  }, [currentStep, handlePrev, tgWebApp]);
 
   const getActivePosition = () => {
     switch (pathname) {
@@ -82,8 +84,11 @@ const NavBarTutorial = ({
       />
       <div
         onClick={() => {
-          if (window.Telegram?.WebApp?.HapticFeedback && currentStep + 1 >= 2) {
-            window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+          if (
+            window?.Telegram?.WebApp?.HapticFeedback &&
+            currentStep + 1 >= 2
+          ) {
+            window?.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
           }
           handlePrev();
         }}
@@ -93,7 +98,7 @@ const NavBarTutorial = ({
       >
         <div className="active:scale-90 transition-transform duration-15">
           {currentStep + 1 === 1 ? (
-            <img
+            <Image
               src={'/img/icons/mipmap.webp'}
               alt={`mipmap`}
               className="w-8 h-8 rounded-[30px]"
@@ -104,12 +109,10 @@ const NavBarTutorial = ({
         </div>
       </div>
       <div className="relative w-[56px] h-[56px] overflow-hidden">
-        {/* Основной круг (фон) */}
         <div className="absolute inset-0 bg-[#140A0A] rounded-full border border-[#363636] flex items-center justify-center z-10">
           <TeamDer />
         </div>
 
-        {/* SVG обводка с тремя сегментами */}
         <svg
           width="56"
           height="56"
@@ -117,7 +120,6 @@ const NavBarTutorial = ({
           className="absolute top-0 left-0 z-10"
         >
           <AnimatePresence>
-            {/* Сегмент 1 */}
             {animatedSteps.includes(1) && (
               <motion.circle
                 key="segment-1"
@@ -141,7 +143,6 @@ const NavBarTutorial = ({
               />
             )}
 
-            {/* Сегмент 2 */}
             {animatedSteps.includes(2) && (
               <motion.circle
                 key="segment-2"
@@ -165,7 +166,6 @@ const NavBarTutorial = ({
               />
             )}
 
-            {/* Сегмент 3 */}
             {animatedSteps.includes(3) && (
               <motion.circle
                 key="segment-3"
@@ -193,8 +193,8 @@ const NavBarTutorial = ({
       </div>
       <div
         onClick={() => {
-          if (window.Telegram?.WebApp?.HapticFeedback) {
-            window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+          if (window?.Telegram?.WebApp?.HapticFeedback) {
+            window?.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
           }
           handleNext();
         }}

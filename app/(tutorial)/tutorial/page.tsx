@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import NavBarTutorial from '@/components/navbarTutorial';
+import useTelegramWebApp from '@/hooks/useTelegramWebApp';
 
 type TutorialStep = {
   id: number;
@@ -45,20 +46,25 @@ export default function TutorialPage() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const [direction, setDirection] = useState<'left' | 'right'>('right');
+  const [isMounted, setIsMounted] = useState(false);
+  const tgWebApp = useTelegramWebApp();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const handleNext = () => {
     if (currentStep < tutorialSteps.length - 1) {
       setDirection('right');
       setCurrentStep(currentStep + 1);
     } else {
-      // if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
-      //   const tg = window.Telegram?.WebApp;
-        // if (!tg.BackButton.isVisible) {
-        //   tg.BackButton.hide();
-        // }
-        localStorage.setItem('tutorial', 'true');
-        router.push('/');
-      // }
+      if (isMounted && tgWebApp) {
+        if (tgWebApp.BackButton.isVisible) {
+          tgWebApp.BackButton.hide();
+        }
+      }
+      localStorage.setItem('tutorial', 'true');
+      router.push('/');
     }
   };
 
@@ -96,7 +102,6 @@ export default function TutorialPage() {
       transition={{ duration: 0.2 }}
     >
       <div className="container mx-auto !px-6 !py-8 h-full flex flex-col">
-        {/* Контент с анимацией */}
         <div className="flex justify-center relative">
           <h1 className="text-3xl">Teamder</h1>
         </div>

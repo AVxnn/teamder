@@ -28,11 +28,16 @@ export default function RootLayout({
   useEffect(() => {
     const tg = window.Telegram?.WebApp;
     console.log(window.Telegram);
-    tg?.expand();
 
-    // Можно также изменить цвет фона
-    tg.backgroundColor = '#140A0A';
-    tg.headerColor = '#140A0A';
+    if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
+      const tg = window.Telegram?.WebApp;
+      if (!tg) {
+        tg?.expand();
+        // Можно также изменить цвет фона
+        tg.backgroundColor = '#140A0A';
+        tg.headerColor = '#140A0A';
+      }
+    }
 
     const user = tg?.initDataUnsafe?.user;
     console.log(user, 'user');

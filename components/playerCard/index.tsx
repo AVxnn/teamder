@@ -5,6 +5,7 @@ import { getPlayerData } from '@/lib/dota-api';
 import { useEffect, useState } from 'react';
 import PlayerCardSkeleton from '../skeletons/PlayerCard';
 import { getHeroInfo } from '@/lib/dota-heroes';
+import Image from 'next/image';
 
 interface PlayerData {
   profile: {
@@ -103,14 +104,14 @@ export default function PlayerCard({ accountId }: { accountId: string }) {
       <div className="p-6">
         <div className="flex items-center space-x-4">
           <div className="relative">
-            <img
+            <Image
               src={playerData.profile.avatarfull}
               alt={playerData.profile.personaname}
               className="w-20 h-20 rounded-full border-2 border-blue-500"
             />
             {playerData.profile.country_code && (
               <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full overflow-hidden border border-gray-700">
-                <img
+                <Image
                   src={`https://flagsapi.com/${playerData.profile.country_code}/flat/64.png`}
                   alt="Country flag"
                   className="w-full h-full object-cover"
@@ -156,7 +157,7 @@ export default function PlayerCard({ accountId }: { accountId: string }) {
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="bg-gray-700 p-3 rounded-lg flex items-center">
-              <img
+              <Image
                 src={`https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${heroData.short}.png`}
                 className="w-12 h-12 mr-3"
                 alt={heroData.full}

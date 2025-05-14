@@ -33,7 +33,7 @@ export default function HomePage() {
     } else {
       setIsLoading(true);
     }
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     const tg = window.Telegram?.WebApp;

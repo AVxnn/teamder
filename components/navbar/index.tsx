@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import React from 'react';
 import { useSnapshot } from 'valtio';
 import { NavLink } from '../UI/NavLink';
+import Image from 'next/image';
 
 const NavBar = () => {
   const snap = useSnapshot(userStore);
@@ -45,7 +46,7 @@ const NavBar = () => {
         className="w-[74px] h-[56px] flex items-center justify-center !rounded-full !border-solid !border-1 !border-[#363636] relative z-10"
       >
         {snap.user?.photo_url ? (
-          <img
+          <Image
             className="w-[48px] !h-[32px] object-cover rounded-full"
             src={snap.user?.photo_url}
             alt="Avatar"
