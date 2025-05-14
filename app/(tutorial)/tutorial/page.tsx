@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import NavBarTutorial from '@/components/navbarTutorial';
@@ -14,36 +14,35 @@ type TutorialStep = {
   gradientTo: string;
 };
 
+const tutorialSteps: TutorialStep[] = [
+  {
+    id: 1,
+    title: 'Быстрая регистрация',
+    description: 'Вы всего в трех шагах от новых тиммейтов',
+    image: '/img/tutorial/tutorial_1.png',
+    gradientFrom: '#0F0505',
+    gradientTo: '#310F0F',
+  },
+  {
+    id: 2,
+    title: 'Поиск новых друзей',
+    description: 'Простой интерфейс поможет быстро найти друзей',
+    image: '/img/tutorial/tutorial_2.png',
+    gradientFrom: '#050F05',
+    gradientTo: '#0F3111',
+  },
+  {
+    id: 3,
+    title: 'Создание карточки',
+    description: 'Начни с добавления информации о себе',
+    image: '/img/tutorial/tutorial_3.png',
+    gradientFrom: '#06050F',
+    gradientTo: '#0F1631',
+  },
+];
+
 export default function TutorialPage() {
   const router = useRouter();
-
-  const tutorialSteps: TutorialStep[] = [
-    {
-      id: 1,
-      title: 'Быстрая регистрация',
-      description: 'Вы всего в трех шагах от новых тиммейтов',
-      image: '/img/tutorial/tutorial_1.png',
-      gradientFrom: '#0F0505',
-      gradientTo: '#310F0F',
-    },
-    {
-      id: 2,
-      title: 'Поиск новых друзей',
-      description: 'Простой интерфейс поможет быстро найти друзей',
-      image: '/img/tutorial/tutorial_2.png',
-      gradientFrom: '#050F05',
-      gradientTo: '#0F3111',
-    },
-    {
-      id: 3,
-      title: 'Создание карточки',
-      description: 'Начни с добавления информации о себе',
-      image: '/img/tutorial/tutorial_3.png',
-      gradientFrom: '#06050F',
-      gradientTo: '#0F1631',
-    },
-  ];
-
   const [currentStep, setCurrentStep] = useState(0);
   const [direction, setDirection] = useState<'left' | 'right'>('right');
 
@@ -84,6 +83,11 @@ export default function TutorialPage() {
     }),
   };
 
+  useEffect(() => {
+    setDirection('left'); // Анимация слева при входе
+    return () => setDirection('right'); // Анимация вправо при выходе
+  }, []);
+
   return (
     <motion.main
       className="h-screen overflow-hidden relative"
@@ -110,12 +114,12 @@ export default function TutorialPage() {
               animate="center"
               exit="exit"
               transition={{ type: 'tween', ease: 'easeInOut', duration: 0.35 }}
-              className="absolute text-center w-full"
+              className="absolute text-center flex items-center flex-col w-full"
             >
               <motion.img
                 src={tutorialSteps[currentStep].image}
                 alt={`Step ${currentStep + 1}`}
-                className="mx-auto mb-8 w-full"
+                className="mx-auto mb-8 w-full max-w-80"
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.35 }}
@@ -123,7 +127,7 @@ export default function TutorialPage() {
               <h1 className="text-2xl !mt-8 font-bold text-white mb-4">
                 {tutorialSteps[currentStep].title}
               </h1>
-              <p className="text-gray-300">
+              <p className="text-gray-300 max-w-[241px]">
                 {tutorialSteps[currentStep].description}
               </p>
             </motion.div>

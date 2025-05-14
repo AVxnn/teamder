@@ -46,9 +46,9 @@ export default function RootLayout({
   }, [isClient]);
 
   return (
-    <>
+    <div className="h-screen overflow-hidden">
       {children}
       {!isLoading ? <NavBar /> : null}
-    </>
+    </div>
   );
 }

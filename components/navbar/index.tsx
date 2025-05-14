@@ -2,10 +2,10 @@
 
 import ChatIcon from '@/public/icons/ChatIcon';
 import { userStore } from '@/store/user';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
 import { useSnapshot } from 'valtio';
+import { NavLink } from '../UI/NavLink';
 
 const NavBar = () => {
   const snap = useSnapshot(userStore);
@@ -26,24 +26,22 @@ const NavBar = () => {
 
   return (
     <div className="fixed flex gap-[8px] bottom-[84px] !p-[5px] left-1/2 transform -translate-x-1/2 bg-[#0A0B14] w-[224px] h-[64px] rounded-full relative">
-      <div
-        className={`absolute h-[56px] bg-[#7C87ED] rounded-full transition-all duration-300 ease ${getActivePosition()}`}
-      />
-
-      <Link
-        href={'/chat'}
+      <NavLink
+        href="/chat"
+        direction="left"
         className="w-[74px] h-[56px] flex items-center justify-center !rounded-full !border-solid !border-1 !border-[#363636] relative z-10"
       >
         <ChatIcon />
-      </Link>
-      <Link
+      </NavLink>
+      <NavLink
         href={'/'}
         className="w-[56px] h-[56px] flex items-center justify-center !rounded-full !border-solid !border-1 !border-[#363636] relative z-10"
       >
         TD
-      </Link>
-      <Link
-        href={'/profile'}
+      </NavLink>
+      <NavLink
+        href="/profile"
+        direction="right"
         className="w-[74px] h-[56px] flex items-center justify-center !rounded-full !border-solid !border-1 !border-[#363636] relative z-10"
       >
         {snap.user?.photo_url ? (
@@ -53,7 +51,10 @@ const NavBar = () => {
             alt="Avatar"
           />
         ) : null}
-      </Link>
+      </NavLink>
+      <div
+        className={`absolute h-[56px] bg-[#7C87ED] rounded-full transition-all duration-300 z-4 ease ${getActivePosition()}`}
+      />
     </div>
   );
 };

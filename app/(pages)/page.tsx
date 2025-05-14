@@ -20,7 +20,7 @@ export default function HomePage() {
   const snap = useSnapshot(userStore);
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -32,11 +32,20 @@ export default function HomePage() {
     if (!isTutorialCompleted) {
       router.push('/tutorial');
     } else {
-      setIsLoading(false);
+      setIsLoading(true);
     }
-  }, [router]);
+  }, []);
 
-  if (isLoading) {
+  useEffect(() => {
+    const tg = window.Telegram?.WebApp;
+    if (!tg) return;
+
+    if (tg.BackButton.isVisible) {
+      tg.BackButton.hide();
+    }
+  }, []);
+
+  if (!isLoading) {
     return <FullPageLoader />;
   }
 
@@ -49,7 +58,6 @@ export default function HomePage() {
       <div className="flex justify-center items-center !pt-[128px]">
         Привет, {snap.user.first_name || 'Гость'} 👋
       </div>
-      <PlayerCard accountId={'337647206'} />
     </main>
   );
 }

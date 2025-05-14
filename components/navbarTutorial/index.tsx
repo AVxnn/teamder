@@ -43,7 +43,7 @@ const NavBarTutorial = ({
     if (!tg) return;
 
     console.log(tg.BackButton.isVisible);
-    if (!tg.BackButton.isVisible) {
+    if (!tg.BackButton.isVisible && currentStep + 1 !== 1) {
       tg.BackButton.show();
     }
     const handleBack = () => {
@@ -55,10 +55,6 @@ const NavBarTutorial = ({
       tg.BackButton.hide();
     } else {
       tg.BackButton.onClick(handleBack);
-    }
-
-    if (currentStep + 1 > 3) {
-      tg.BackButton.hide();
     }
 
     return () => {
@@ -96,7 +92,15 @@ const NavBarTutorial = ({
     hover:brightness-110 cursor-pointer active:opacity-90"
       >
         <div className="active:scale-90 transition-transform duration-15">
-          <ArrowLeft />
+          {currentStep + 1 === 1 ? (
+            <img
+              src={'/img/icons/mipmap.webp'}
+              alt={`mipmap`}
+              className="w-8 h-8 rounded-[30px]"
+            />
+          ) : (
+            <ArrowLeft />
+          )}
         </div>
       </div>
       <div className="relative w-[56px] h-[56px] overflow-hidden">

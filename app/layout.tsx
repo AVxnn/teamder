@@ -1,17 +1,20 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import SessionProviderWrapper from './providers/SessionProviderWrapper';
 import Script from 'next/script';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+import { Urbanist, Montserrat } from 'next/font/google';
+
+const urbanist = Urbanist({
   subsets: ['latin'],
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-urbanist',
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const montserrat = Montserrat({
   subsets: ['latin'],
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-urbanist',
 });
 
 export const metadata: Metadata = {
@@ -27,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${urbanist.variable} ${montserrat.variable} antialiased`}
       >
         <SessionProviderWrapper>{children}</SessionProviderWrapper>
         <Script
