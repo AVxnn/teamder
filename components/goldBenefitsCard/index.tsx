@@ -24,7 +24,7 @@ export default function GoldBenefitsCard() {
             GOLD
           </span>
         </div>
-        <button className="bg-indigo-400 text-white text-sm !px-4 !py-1 rounded-full">
+        <button className="bg-indigo-400 text-white text-sm !px-4 !py-1 rounded-full hover:scale-105 transition-transform cursor-pointer">
           Улучшить
         </button>
       </div>

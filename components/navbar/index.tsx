@@ -16,7 +16,7 @@ const NavBar = () => {
 
   const getActivePosition = () => {
     switch (pathname) {
-      case '/chat':
+      case '/likes':
         return 'translate-x-0 w-[70px]';
       case '/':
         return 'translate-x-[80px] w-[54px]';
@@ -35,7 +35,7 @@ const NavBar = () => {
       className="flex gap-[8px] bottom-[100px] !p-[5px] left-1/2 transform -translate-x-1/2 backdrop-blur-md bg-transparent/30 z-10 w-[224px] h-[64px] rounded-full relative z-10"
     >
       <NavLink
-        href="/chat"
+        href="/likes"
         direction="left"
         className="w-[74px] h-[56px] flex items-center justify-center !rounded-full !border-solid !border-1 !border-[#363636] relative z-10 active:scale-95 transform transition-all duration-15 ease-in-out
     hover:brightness-110 cursor-pointer active:opacity-90"

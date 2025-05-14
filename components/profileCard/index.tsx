@@ -102,7 +102,7 @@ export default function ProfileCard({
               href={discordUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 transition-transform"
+              className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 transition-transform cursor-pointer"
             >
               <Discord />
             </a>
@@ -110,7 +110,7 @@ export default function ProfileCard({
               href={steamUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 transition-transform"
+              className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 transition-transform cursor-pointer"
             >
               <Steam />
             </a>
@@ -118,7 +118,7 @@ export default function ProfileCard({
               href={telegramUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 transition-transform"
+              className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 transition-transform cursor-pointer"
             >
               <Telegram />
             </a>

@@ -66,7 +66,7 @@ const NavBarTutorial = ({
 
   const getActivePosition = () => {
     switch (pathname) {
-      case '/chat':
+      case '/likes':
         return 'translate-x-0 w-[70px]';
       case '/':
         return 'translate-x-[80px] w-[54px]';

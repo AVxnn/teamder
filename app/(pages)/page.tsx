@@ -40,6 +40,7 @@ export default function HomePage() {
 
     if (tg.BackButton.isVisible) {
       tg.BackButton.hide();
+      tg.BackButton.offClick(() => {});
     }
   }, []);
 
@@ -54,7 +55,7 @@ export default function HomePage() {
   return (
     <main className="bg-gradient-to-tr from-[#0F0505] to-[#310F0F] h-screen overflow-hidden relative">
       <TeamderHeader />
-      <div className="!px-6 !mt-8 flex justify-center">
+      <div className="!px-6 !mt-22 flex justify-center">
         <SwipeableCardStack />
       </div>
     </main>

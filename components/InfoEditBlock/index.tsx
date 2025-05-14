@@ -13,17 +13,17 @@ const InfoEditBlock = () => {
       className="flex flex-col gap-4 !mt-4 !p-4 bg-[#140A0A] outline outline-[#363636] rounded-[32px] w-full"
     >
       <TDImage
-        src={'/img/tutorial/tutorial_3.png'}
+        src={'/img/illustrations/fire.png'}
         alt="Profile banner"
         width={480}
-        height={200}
+        height={280}
         className="rounded-[24px] w-full object-cover pointer-events-none"
       />
       <div
-        className="rounded-3xl outline outline-[#363636] text-center bg-[#140A0A] !px-4 !py-4 text-white w-full"
+        className="rounded-3xl outline outline-[#363636] text-center bg-[#140A0A] !px-4 !py-4 text-white w-full cursor-pointer hover:scale-102 transition-all"
         onClick={() => {}}
       >
-        Редактировать карточку
+        Наш телеграм канал
       </div>
     </motion.div>
   );

@@ -10,8 +10,8 @@ import Notification from '@/public/icons/Notification';
 const TeamderHeader = () => {
   const snap = useSnapshot(userStore);
   return (
-    <div className="max-w-[500px] !mx-auto flex justify-between !px-6 !my-3 relative z-10">
-      <div className="relative w-12 h-12 !mr-3">
+    <div className="max-w-[560px] !mx-auto flex fixed w-full justify-between !px-6 !my-3 z-10">
+      <div className="relative w-12 h-12">
         <TDImage
           useNextImage
           src={snap.user.photo_url}
@@ -22,9 +22,9 @@ const TeamderHeader = () => {
         />
       </div>
       <motion.h1
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.2, delay: 0 }}
+        // initial={{ opacity: 0, y: -20 }}
+        // animate={{ opacity: 1, y: 0 }}
+        // transition={{ duration: 0.2, delay: 0 }}
         className="absolute left-1/2 transform -translate-x-1/2 text-[32px]"
       >
         Teamder

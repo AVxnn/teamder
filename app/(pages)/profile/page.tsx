@@ -1,15 +1,39 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import UserHeader from '@/components/headers/userHeader';
 import ProfileCard from '@/components/profileCard';
 import ProfileSlider from '@/components/profileSlider';
 import { motion } from 'framer-motion';
 import GoldBenefitsCard from '@/components/goldBenefitsCard';
 import InfoEditBlock from '@/components/InfoEditBlock';
+import Book from '@/public/icons/Book';
+import News from '@/public/icons/News';
+import Settings from '@/public/icons/Settings';
+import { useRouter } from 'next/navigation';
+import useTelegramWebApp from '@/hooks/useTelegramWebApp';
+import { useEffect } from 'react';
 
 export default function ProfilePage() {
   const router = useRouter();
+
+  const tgWebApp = useTelegramWebApp();
+
+  useEffect(() => {
+    console.log(tgWebApp);
+    if (!tgWebApp) return;
+
+    if (!tgWebApp.BackButton.isVisible) {
+      tgWebApp.BackButton.show();
+    }
+
+    tgWebApp.BackButton.show();
+    tgWebApp.BackButton.onClick(() => router.push('/'));
+
+    return () => {
+      tgWebApp.BackButton.offClick(() => router.push('/'));
+      tgWebApp.BackButton.hide();
+    };
+  }, [tgWebApp]);
 
   return (
     <main className="bg-gradient-to-tr flex justify-center from-[#0F0505] to-[#310F0F] h-screen overflow-auto">
@@ -39,16 +63,41 @@ export default function ProfilePage() {
           onLikeClick={() => {}}
           onSuperLikeClick={() => {}}
         />
-        <InfoEditBlock />
         <GoldBenefitsCard />
-        <div
-          className="rounded-3xl outline outline-[#363636] text-center bg-[#140A0A] !mt-4 !px-4 !py-4 text-white w-full"
-          onClick={() => {
-            localStorage.setItem('tutorial', 'false');
-            router.push('/tutorial');
-          }}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
+          className="mx-auto !px-4 text-white rounded-[32px] !mt-3"
         >
-          Открыть туториал
+          <div className="flex justify-around gap-3 mt-6 !px-4">
+            <div
+              rel="noopener noreferrer"
+              className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 transition-transform cursor-pointer"
+            >
+              <Book />
+            </div>
+            <div
+              rel="noopener noreferrer"
+              className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 transition-transform cursor-pointer"
+            >
+              <News />
+            </div>
+            <div
+              rel="noopener noreferrer"
+              className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 transition-transform cursor-pointer"
+            >
+              <Settings />
+            </div>
+          </div>
+        </motion.div>
+        <InfoEditBlock />
+        <div
+          onClick={() => router.push('/tutorial')}
+          rel="noopener noreferrer"
+          className="bg-[#140A0A] !mt-3 flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 transition-transform cursor-pointer"
+        >
+          Туториал
         </div>
       </div>
     </main>

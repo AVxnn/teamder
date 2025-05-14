@@ -10,7 +10,7 @@ export const routeAnimations: Record<string, RouteAnimationConfig> = {
     enter: 'none',
     exit: 'none'
   },
-  '/chat': {
+  '/likes': {
     enter: 'left',
     exit: 'right'
   },
