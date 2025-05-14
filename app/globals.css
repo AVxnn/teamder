@@ -58,6 +58,10 @@ body {
   overscroll-behavior: none;
 }
 
+div::-webkit-scrollbar {
+  width: 0;
+}
+
 [data-animate-presence] {
   position: relative;
   width: 100%;

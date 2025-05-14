@@ -91,7 +91,7 @@ export default function TutorialPage() {
 
   return (
     <motion.main
-      className="h-screen overflow-hidden relative"
+      className="h-screen relative"
       initial={{
         background: `linear-gradient(to bottom right, ${tutorialSteps[0].gradientFrom}, ${tutorialSteps[0].gradientTo})`,
       }}

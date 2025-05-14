@@ -38,11 +38,6 @@ export default function RootLayout({
     if (typeof window !== 'undefined' && tgWebApp) {
       if (!tgWebApp) {
         tgWebApp?.expand();
-        try {
-          tgWebApp?.requestFullscreen();
-        } catch (err) {
-          console.log(err);
-        }
 
         tgWebApp.setBackgroundColor('#140A0A');
         tgWebApp.headerColor = '#140A0A';
@@ -64,7 +59,7 @@ export default function RootLayout({
   }, [isClient]);
 
   return (
-    <div className="h-screen overflow-hidden">
+    <div className="h-screen ">
       {children}
       <NavBar />
     </div>

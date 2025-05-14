@@ -3,6 +3,7 @@ import './globals.css';
 import Script from 'next/script';
 
 import { Urbanist, Montserrat } from 'next/font/google';
+import TelegramFullscreen from '@/components/TelegramFullscreen';
 
 const urbanist = Urbanist({
   subsets: ['latin'],
@@ -37,6 +38,7 @@ export default function RootLayout({
       <body
         className={`${urbanist.variable} ${montserrat.variable} antialiased`}
       >
+        <TelegramFullscreen />
         {children}
         <Script
           src="https://telegram.org/js/telegram-web-app.js"

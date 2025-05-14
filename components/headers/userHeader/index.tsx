@@ -4,11 +4,12 @@ import Image from 'next/image';
 import Notification from '@/public/icons/Notification';
 import { useSnapshot } from 'valtio/react';
 import { userStore } from '@/store/user';
+import { motion } from 'framer-motion';
 
 export default function UserHeader() {
   const snap = useSnapshot(userStore);
   return (
-    <header className="flex fixed w-full items-center justify-between !p-6 border-b border-gray-200">
+    <header className="max-w-[560px] flex fixed w-full items-center justify-between !px-6 !py-3 backdrop-blur-md bg-transparent/30 z-10">
       {/* Левая часть: аватар + текст */}
       <div className="flex items-center">
         {/* Аватарка 48x48 с отступом справа 12 (tailwind: mr-3) */}
@@ -24,10 +25,22 @@ export default function UserHeader() {
 
         {/* Текст и никнейм */}
         <div className="flex flex-col">
-          <span className="text-[12px] text-[#AFAFAF]">Доброе утро</span>
-          <span className="text-sm font-medium text-[#FFFFFF]">
+          <motion.span
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.2, delay: 0.06 }}
+            className="text-[12px] text-[#AFAFAF]"
+          >
+            Доброе утро
+          </motion.span>
+          <motion.span
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.2, delay: 0.03 }}
+            className="text-sm font-medium text-[#FFFFFF]"
+          >
             {snap.user.first_name + snap.user.last_name}
-          </span>
+          </motion.span>
         </div>
       </div>
 

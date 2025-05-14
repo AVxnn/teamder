@@ -78,7 +78,12 @@ const NavBarTutorial = ({
   };
 
   return (
-    <div className="fixed flex gap-[8px] bottom-[100px] !p-[5px] left-1/2 transform -translate-x-1/2 bg-[#252525] w-[194px] h-[64px] rounded-full relative">
+    <motion.div
+      initial={{ opacity: 0, x: 0 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.2, delay: 0 }}
+      className="flex gap-[8px] bottom-[100px] !p-[5px] left-1/2 transform -translate-x-1/2 backdrop-blur-md bg-transparent/30 w-[224px] h-[64px] rounded-full relative"
+    >
       <div
         className={`absolute h-[56px] bg-[#140A0A] rounded-full transition-all duration-300 ease ${getActivePosition()}`}
       />
@@ -92,7 +97,7 @@ const NavBarTutorial = ({
           }
           handlePrev();
         }}
-        className="w-[56px] h-[56px] flex bg-[#140A0A] items-center justify-center rounded-full border border-solid border-[#363636] relative z-10
+        className="w-[74px] h-[56px] flex bg-[#140A0A] items-center justify-center rounded-full !border-solid !border-1 !border-[#363636] relative z-10
     active:scale-95 transform transition-transform duration-15 ease-in-out
     hover:brightness-110 cursor-pointer active:opacity-90"
       >
@@ -112,7 +117,7 @@ const NavBarTutorial = ({
         </div>
       </div>
       <div className="relative w-[56px] h-[56px] overflow-hidden">
-        <div className="absolute inset-0 bg-[#140A0A] rounded-full border border-[#363636] flex items-center justify-center z-10">
+        <div className="absolute inset-0 bg-[#140A0A] rounded-full !border-solid !border-1 !border-[#363636] flex items-center justify-center z-10">
           <TeamDer />
         </div>
 
@@ -201,7 +206,7 @@ const NavBarTutorial = ({
           }
           handleNext();
         }}
-        className={`w-[56px] h-[56px] flex items-center justify-center rounded-full border border-solid border-[#363636] relative z-10
+        className={`w-[74px] h-[56px] flex items-center justify-center rounded-full !border-solid !border-1 !border-[#363636] relative z-10
     active:scale-95 transform transition-transform duration-15 ease-in-out
     hover:brightness-110 cursor-pointer active:opacity-90 
     ${currentStep + 1 === 3 ? 'bg-[#7C87ED]' : 'bg-[#140A0A]'}`}
@@ -210,7 +215,7 @@ const NavBarTutorial = ({
           {currentStep + 1 === 3 ? <Check /> : <ArrowRight />}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

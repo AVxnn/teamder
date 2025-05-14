@@ -1,11 +1,11 @@
 'use client';
 
-import { userStore } from '@/store/user';
 import { TelegramWebApp } from '@/types/telegram';
 import { useEffect, useState } from 'react';
-import { useSnapshot } from 'valtio';
 import { useRouter } from 'next/navigation';
 import FullPageLoader from '@/components/fullPageLoader';
+import TeamderHeader from '@/components/headers/teamderHeader';
+import SwipeableCardStack from '@/components/SwipeableCardStack';
 
 declare global {
   interface Window {
@@ -16,7 +16,6 @@ declare global {
 }
 
 export default function HomePage() {
-  const snap = useSnapshot(userStore);
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -54,8 +53,9 @@ export default function HomePage() {
 
   return (
     <main className="bg-gradient-to-tr from-[#0F0505] to-[#310F0F] h-screen overflow-hidden relative">
-      <div className="flex justify-center items-center !pt-[128px]">
-        Привет, {snap.user.first_name || 'Гость'} 👋
+      <TeamderHeader />
+      <div className="!px-6 !mt-8 flex justify-center">
+        <SwipeableCardStack />
       </div>
     </main>
   );
