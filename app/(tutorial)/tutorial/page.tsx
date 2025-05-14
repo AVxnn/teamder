@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import NavBarTutorial from '@/components/navbarTutorial';
@@ -51,13 +51,14 @@ export default function TutorialPage() {
       setDirection('right');
       setCurrentStep(currentStep + 1);
     } else {
-      const tg = window.Telegram?.WebApp;
-
-      if (!tg.BackButton.isVisible) {
-        tg.BackButton.hide();
+      if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
+        const tg = window.Telegram?.WebApp;
+        if (!tg.BackButton.isVisible) {
+          tg.BackButton.hide();
+        }
+        localStorage.setItem('tutorial', 'true');
+        router.push('/');
       }
-      localStorage.setItem('tutorial', 'true');
-      router.push('/');
     }
   };
 
@@ -82,11 +83,6 @@ export default function TutorialPage() {
       opacity: 0,
     }),
   };
-
-  useEffect(() => {
-    setDirection('left'); // Анимация слева при входе
-    return () => setDirection('right'); // Анимация вправо при выходе
-  }, []);
 
   return (
     <motion.main
