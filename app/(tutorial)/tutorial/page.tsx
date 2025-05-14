@@ -51,14 +51,14 @@ export default function TutorialPage() {
       setDirection('right');
       setCurrentStep(currentStep + 1);
     } else {
-      if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
-        const tg = window.Telegram?.WebApp;
-        if (!tg.BackButton.isVisible) {
-          tg.BackButton.hide();
-        }
+      // if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
+      //   const tg = window.Telegram?.WebApp;
+        // if (!tg.BackButton.isVisible) {
+        //   tg.BackButton.hide();
+        // }
         localStorage.setItem('tutorial', 'true');
         router.push('/');
-      }
+      // }
     }
   };
 
