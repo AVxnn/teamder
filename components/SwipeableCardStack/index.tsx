@@ -71,13 +71,13 @@ export default function SwipeableCardStack() {
   const y = useMotionValue(0);
   const controls = useAnimation();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleDragEnd = async (_: any, info: any) => {
     const offsetX = info.offset.x;
     const offsetY = info.offset.y;
 
     if (Math.abs(offsetX) > 120) {
       const directionX = offsetX > 0 ? 1 : -1;
-      const directionY = offsetY > 0 ? 1 : -1;
       await controls.start({
         x: directionX * 500,
         y: offsetY,
@@ -90,7 +90,6 @@ export default function SwipeableCardStack() {
       setIndex((prev) => (prev + 1) % cards.length);
       controls.set({ x: 0, y: 0, opacity: 1 });
     } else if (Math.abs(offsetY) > 120) {
-      const directionX = offsetX > 0 ? 1 : -1;
       const directionY = offsetY > 0 ? 1 : -1;
       await controls.start({
         x: offsetX,
