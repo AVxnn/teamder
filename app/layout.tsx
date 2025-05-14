@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import SessionProviderWrapper from './providers/SessionProviderWrapper';
 import Script from 'next/script';
 
 import { Urbanist, Montserrat } from 'next/font/google';
@@ -29,10 +28,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+      </head>
       <body
         className={`${urbanist.variable} ${montserrat.variable} antialiased`}
       >
-        <SessionProviderWrapper>{children}</SessionProviderWrapper>
+        {children}
         <Script
           src="https://telegram.org/js/telegram-web-app.js"
           strategy="beforeInteractive"

@@ -7,10 +7,10 @@ import Check from '@/public/icons/Check';
 import TeamDer from '@/public/icons/TeamDer';
 import { userStore } from '@/store/user';
 import { AnimatePresence, motion } from 'framer-motion';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
+import TDImage from '../UI/TDImage';
 
 const NavBarTutorial = ({
   currentStep,
@@ -62,7 +62,7 @@ const NavBarTutorial = ({
     return () => {
       tgWebApp.BackButton.offClick(handleBack);
     };
-  }, [currentStep, handlePrev, tgWebApp]);
+  }, [currentStep]);
 
   const getActivePosition = () => {
     switch (pathname) {
@@ -98,8 +98,11 @@ const NavBarTutorial = ({
       >
         <div className="active:scale-90 transition-transform duration-15">
           {currentStep + 1 === 1 ? (
-            <Image
+            <TDImage
+              useNextImage
               src={'/img/icons/mipmap.webp'}
+              width={32}
+              height={32}
               alt={`mipmap`}
               className="w-8 h-8 rounded-[30px]"
             />

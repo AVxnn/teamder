@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import React from 'react';
 import { useSnapshot } from 'valtio';
 import { NavLink } from '../UI/NavLink';
-import Image from 'next/image';
+import TDImage from '../UI/TDImage';
 
 const NavBar = () => {
   const snap = useSnapshot(userStore);
@@ -26,7 +26,7 @@ const NavBar = () => {
   };
 
   return (
-    <div className="fixed flex gap-[8px] bottom-[84px] !p-[5px] left-1/2 transform -translate-x-1/2 bg-[#0A0B14] w-[224px] h-[64px] rounded-full relative">
+    <div className="fixed flex gap-[8px] bottom-[84px] !p-[5px] left-1/2 transform -translate-x-1/2 bg-[#140A0A] w-[224px] h-[64px] rounded-full relative">
       <NavLink
         href="/chat"
         direction="left"
@@ -46,7 +46,10 @@ const NavBar = () => {
         className="w-[74px] h-[56px] flex items-center justify-center !rounded-full !border-solid !border-1 !border-[#363636] relative z-10"
       >
         {snap.user?.photo_url ? (
-          <Image
+          <TDImage
+            useNextImage
+            width={48}
+            height={32}
             className="w-[48px] !h-[32px] object-cover rounded-full"
             src={snap.user?.photo_url}
             alt="Avatar"

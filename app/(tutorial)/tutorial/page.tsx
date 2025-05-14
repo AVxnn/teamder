@@ -52,7 +52,6 @@ export default function TutorialPage() {
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
   const handleNext = () => {
     if (currentStep < tutorialSteps.length - 1) {
       setDirection('right');
@@ -105,7 +104,7 @@ export default function TutorialPage() {
         <div className="flex justify-center relative">
           <h1 className="text-3xl">Teamder</h1>
         </div>
-        <div className="flex-1 !mt-[-32px] flex items-center justify-center relative">
+        <div className="flex-1 !mt-[-64px] flex items-center justify-center relative">
           <AnimatePresence custom={direction} mode="wait">
             <motion.div
               key={tutorialSteps[currentStep].id}
@@ -125,10 +124,10 @@ export default function TutorialPage() {
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.35 }}
               />
-              <h1 className="text-2xl !mt-8 font-bold text-white mb-4">
+              <h1 className="text-[20px] !mt-8 !mb-2 font-bold text-white mb-4">
                 {tutorialSteps[currentStep].title}
               </h1>
-              <p className="text-gray-300 max-w-[241px]">
+              <p className="text-[#AFAFAF] text-[14px] max-w-[241px]">
                 {tutorialSteps[currentStep].description}
               </p>
             </motion.div>

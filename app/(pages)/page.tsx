@@ -20,7 +20,7 @@ export default function HomePage() {
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-
+  console.log(isLoading, isClient);
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -33,7 +33,7 @@ export default function HomePage() {
     } else {
       setIsLoading(true);
     }
-  }, [router]);
+  }, []);
 
   useEffect(() => {
     const tg = window.Telegram?.WebApp;
@@ -53,7 +53,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className="bg-gradient-to-tr from-[#05060F] to-[#0F1231] h-screen overflow-hidden relative">
+    <main className="bg-gradient-to-tr from-[#0F0505] to-[#310F0F] h-screen overflow-hidden relative">
       <div className="flex justify-center items-center !pt-[128px]">
         Привет, {snap.user.first_name || 'Гость'} 👋
       </div>

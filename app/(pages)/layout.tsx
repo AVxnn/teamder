@@ -1,7 +1,9 @@
 'use client';
 
 import NavBar from '@/components/navbar';
+import useTelegramWebApp from '@/hooks/useTelegramWebApp';
 import { userStore } from '@/store/user';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function RootLayout({
@@ -10,7 +12,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [isClient, setIsClient] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const tgWebApp = useTelegramWebApp();
+  const router = useRouter();
 
   useEffect(() => {
     setIsClient(true);
@@ -18,28 +21,38 @@ export default function RootLayout({
 
   useEffect(() => {
     const isTutorialCompleted = localStorage.getItem('tutorial') === 'true';
-    console.log(isTutorialCompleted);
     if (!isTutorialCompleted) {
+      router.push('/tutorial');
     } else {
-      setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    const tg = window.Telegram?.WebApp;
-    console.log(window.Telegram);
+    if (window.Telegram && tgWebApp) {
+      tgWebApp.disableVerticalSwipes();
+      tgWebApp.ready();
+    }
+  }, []);
 
-    if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
-      const tg = window.Telegram?.WebApp;
-      if (!tg) {
-        tg?.expand();
-        // Можно также изменить цвет фона
-        tg.backgroundColor = '#140A0A';
-        tg.headerColor = '#140A0A';
+  useEffect(() => {
+    if (typeof window !== 'undefined' && tgWebApp) {
+      if (!tgWebApp) {
+        tgWebApp?.expand();
+        try {
+          tgWebApp?.requestFullscreen();
+        } catch (err) {
+          console.log(err);
+        }
+
+        tgWebApp.setBackgroundColor('#140A0A');
+        tgWebApp.headerColor = '#140A0A';
+        tgWebApp.ready();
+
+        tgWebApp.enableClosingConfirmation();
       }
     }
 
-    const user = tg?.initDataUnsafe?.user;
+    const user = tgWebApp?.initDataUnsafe?.user;
     console.log(user, 'user');
     if (isClient && user) {
       userStore.user.id = user.id;
@@ -53,7 +66,7 @@ export default function RootLayout({
   return (
     <div className="h-screen overflow-hidden">
       {children}
-      {!isLoading ? <NavBar /> : null}
+      <NavBar />
     </div>
   );
 }
