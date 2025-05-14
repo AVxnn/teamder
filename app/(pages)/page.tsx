@@ -1,6 +1,5 @@
 'use client';
 
-import PlayerCard from '@/components/playerCard';
 import { userStore } from '@/store/user';
 import { TelegramWebApp } from '@/types/telegram';
 import { useEffect, useState } from 'react';
