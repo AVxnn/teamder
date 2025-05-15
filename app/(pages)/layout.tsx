@@ -3,6 +3,7 @@
 import NavBar from '@/components/navbar';
 import useTelegramWebApp from '@/hooks/useTelegramWebApp';
 import { userStore } from '@/store/user';
+import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -44,12 +45,40 @@ export default function RootLayout({
         tgWebApp.ready();
 
         tgWebApp.enableClosingConfirmation();
+        tgWebApp.requestFullscreen();
       }
     }
 
     const user = tgWebApp?.initDataUnsafe?.user;
+
+    const getUserData = async () => {
+      try {
+        const response = await axios.post(
+          'http://localhost:3002/api/auth/telegram-webapp',
+          {
+            id: user.id,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            username: user.username,
+            photo_url: user.photo_url,
+          },
+        );
+        if (response.data.success) {
+          console.log(response.data);
+          userStore.user = response.data.user;
+        } else {
+          console.error('⚠️ Ошибка создания:', response.data.error);
+        }
+      } catch (err) {
+        console.error('❌ Ошибка при запросе:', err);
+      }
+    };
+
     console.log(user, 'user');
+
     if (isClient && user) {
+      getUserData();
+
       userStore.user.id = user.id;
       userStore.user.first_name = user.first_name;
       userStore.user.last_name = user.last_name;

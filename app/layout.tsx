@@ -4,6 +4,7 @@ import Script from 'next/script';
 
 import { Urbanist, Montserrat } from 'next/font/google';
 import TelegramFullscreen from '@/components/TelegramFullscreen';
+import 'react-spring-bottom-sheet/dist/style.css';
 
 const urbanist = Urbanist({
   subsets: ['latin'],

@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import FullPageLoader from '@/components/fullPageLoader';
 import TeamderHeader from '@/components/headers/teamderHeader';
 import SwipeableCardStack from '@/components/SwipeableCardStack';
+import { useSnapshot } from 'valtio';
+import { userStore } from '@/store/user';
 
 declare global {
   interface Window {
@@ -16,6 +18,7 @@ declare global {
 }
 
 export default function HomePage() {
+  const { user } = useSnapshot(userStore);
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -25,14 +28,19 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
+    if (!user || !user.profile || Object.keys(user.profile).length === 0) {
+      router.replace('/tutorial');
+    } else {
+      setIsLoading(true);
+    }
+
     const isTutorialCompleted = localStorage.getItem('tutorial') === 'true';
     console.log(isTutorialCompleted);
     if (!isTutorialCompleted) {
       router.push('/tutorial');
     } else {
-      setIsLoading(true);
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     const tg = window.Telegram?.WebApp;

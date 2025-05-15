@@ -63,7 +63,7 @@ export default function TutorialPage() {
         }
       }
       localStorage.setItem('tutorial', 'true');
-      router.push('/');
+      router.push('/create');
     }
   };
 
