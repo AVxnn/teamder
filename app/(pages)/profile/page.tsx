@@ -12,9 +12,12 @@ import Settings from '@/public/icons/Settings';
 import { useRouter } from 'next/navigation';
 import useTelegramWebApp from '@/hooks/useTelegramWebApp';
 import { useEffect } from 'react';
+import { useSnapshot } from 'valtio';
+import { userStore } from '@/store/user';
 
 export default function ProfilePage() {
   const router = useRouter();
+  const snap = useSnapshot(userStore);
 
   const tgWebApp = useTelegramWebApp();
 
@@ -34,7 +37,6 @@ export default function ProfilePage() {
       tgWebApp.BackButton.hide();
     };
   }, [tgWebApp]);
-
   return (
     <main className="bg-gradient-to-tr flex justify-center from-[#0F0505] to-[#310F0F] h-screen overflow-auto">
       <UserHeader />
@@ -48,14 +50,14 @@ export default function ProfilePage() {
           <h2 className="text-[16px] font-medium !mb-4">Ваш профиль</h2>
         </motion.div>
         <ProfileCard
-          nickname="Vxnn"
+          nickname={snap.user?.profile?.nickname}
           socialBar
-          rating={2400}
-          totalGames={2000}
-          wins={1200}
-          customField="Новый"
-          find="Ищу команду для турниров. Дискорд обязателен."
-          aboutme="Профессиональный игрок. Люблю стратегии."
+          rating={snap.user?.profile?.rating}
+          totalGames={snap.user?.profile?.hoursPlayed}
+          wins={snap.user?.profile?.wins}
+          losses={snap.user?.profile?.losses}
+          find={snap.user?.profile?.about}
+          aboutme={snap.user?.profile?.lookingFor}
         />
         <ProfileSlider
           likes={0}

@@ -11,14 +11,14 @@ export interface TelegramUser {
 }
 
 export interface UserProfile {
-  nickname?: string;
-  about?: string;
-  lookingFor?: string;
+  nickname: string;
+  about: string;
+  lookingFor: string;
   steamId?: string;
-  rating?: number;
-  hoursPlayed?: number;
-  wins?: number;
-  losses?: number;
+  rating: number;
+  hoursPlayed: number;
+  wins: number;
+  losses: number;
   discordLink?: string;
   steamLink?: string;
   cardImage?: string;     // base64 или URL

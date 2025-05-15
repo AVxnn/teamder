@@ -9,7 +9,7 @@ type ProfileCardProps = {
   rating: number;
   totalGames: number;
   wins: number;
-  customField: string;
+  losses: number;
   find: string;
   aboutme: string;
   imageUrl?: string;
@@ -24,7 +24,7 @@ export default function ProfileCard({
   rating,
   totalGames,
   wins,
-  customField,
+  losses,
   find,
   aboutme,
   imageUrl,
@@ -84,7 +84,7 @@ export default function ProfileCard({
             <div className="flex flex-col  gap-1">
               <span className="text-[12px] text-[#AFAFAF]">Поражений:</span>
               <span className="text-[16px] w-24 text-center outline outline-[#363636] text-white !px-3 !py-1.5 bg-[#140A0A] rounded-full font-medium">
-                {customField}
+                {losses}
               </span>
             </div>
           </div>

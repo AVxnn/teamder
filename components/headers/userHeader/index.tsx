@@ -39,7 +39,7 @@ export default function UserHeader() {
             transition={{ duration: 0.2, delay: 0.03 }}
             className="text-sm font-medium text-[#FFFFFF]"
           >
-            {snap.user.first_name + snap.user.last_name}
+            {snap.user.first_name}
           </motion.span>
         </div>
       </div>

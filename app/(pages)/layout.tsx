@@ -66,6 +66,7 @@ export default function RootLayout({
         if (response.data.success) {
           console.log(response.data);
           userStore.user = response.data.user;
+          console.log('snap', response.data.user);
         } else {
           console.error('⚠️ Ошибка создания:', response.data.error);
         }
@@ -78,12 +79,6 @@ export default function RootLayout({
 
     if (isClient && user) {
       getUserData();
-
-      userStore.user.id = user.id;
-      userStore.user.first_name = user.first_name;
-      userStore.user.last_name = user.last_name;
-      userStore.user.username = user.username;
-      userStore.user.photo_url = user.photo_url;
     }
   }, [isClient]);
 

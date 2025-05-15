@@ -5,6 +5,8 @@ import {
   AnimatePresence,
   useMotionValue,
   useAnimation,
+  type Variants,
+  type Transition,
 } from 'framer-motion';
 import { useEffect, useRef } from 'react';
 import { useDragControls } from 'framer-motion';
@@ -17,8 +19,36 @@ type BottomSheetProps = {
   removeBg?: boolean;
   removeX?: boolean;
   removeDrag?: boolean;
+  disableAnimation?: boolean;
+  customAnimation?: {
+    backdrop?: Variants;
+    sheet?: Variants;
+    transition?: Transition;
+  };
   titleClassName?: string;
   children: React.ReactNode;
+};
+
+const defaultAnimation: {
+  backdrop: Variants;
+  sheet: Variants;
+  transition: Transition;
+} = {
+  backdrop: {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+  },
+  sheet: {
+    initial: { y: 500 },
+    animate: { y: 0 },
+    exit: { y: 500 },
+  },
+  transition: {
+    type: 'spring',
+    damping: 25,
+    stiffness: 200,
+  },
 };
 
 export default function BottomSheet({
@@ -28,6 +58,8 @@ export default function BottomSheet({
   removeBg,
   removeDrag,
   titleClassName,
+  disableAnimation = false,
+  customAnimation,
   removeX,
   children,
 }: BottomSheetProps) {
@@ -36,42 +68,111 @@ export default function BottomSheet({
   const dragControls = useDragControls();
   const sheetRef = useRef<HTMLDivElement>(null);
 
-  // Закрытие по клику вне области
+  // Мерджим кастомные анимации с дефолтными
+
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (
       sheetRef.current &&
       !sheetRef.current.contains(e.target as Node) &&
       !removeBg
     ) {
-      onClose();
+      onClose?.();
     }
   };
 
-  // Анимация при открытии
   useEffect(() => {
-    if (isOpen) {
-      controls.start({
-        y: 0,
-        transition: { type: 'spring', damping: 25, stiffness: 200 },
-      });
-    }
-  }, [isOpen, controls]);
+    if (disableAnimation) return;
 
-  // Обработка свайпа вниз
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (isOpen) {
+      controls.start('animate');
+    }
+  }, [isOpen, controls, disableAnimation]);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleDragEnd = async (_: any, info: any) => {
+    if (disableAnimation) {
+      onClose?.();
+      return;
+    }
+
     const offset = info.offset.y;
     const velocity = info.velocity.y;
 
     if (offset > 100 || velocity > 800) {
-      await controls.start({ y: 500, transition: { duration: 0.2 } });
-      onClose();
+      await controls.start('exit');
+      onClose?.();
     } else {
-      controls.start({
-        y: 0,
-        transition: { type: 'spring', damping: 25, stiffness: 200 },
-      });
+      controls.start('animate');
     }
+  };
+
+  const mergedAnimation = {
+    backdrop: {
+      ...defaultAnimation.backdrop,
+      ...(customAnimation?.backdrop || {}),
+    },
+    sheet: {
+      ...defaultAnimation.sheet,
+      ...(customAnimation?.sheet || {}),
+    },
+    transition: {
+      ...defaultAnimation.transition,
+      ...(customAnimation?.transition || {}),
+    },
+  };
+
+  // Пропсы для анимации
+  const getAnimationProps = () => {
+    if (disableAnimation) {
+      return {
+        initial: { opacity: 1 },
+        animate: { opacity: 1 },
+        exit: { opacity: 1 },
+        transition: { duration: 0 },
+      };
+    }
+
+    return {
+      initial: 'initial',
+      animate: 'animate',
+      exit: 'exit',
+      variants: mergedAnimation.backdrop,
+      transition: mergedAnimation.transition,
+    };
+  };
+
+  const getSheetAnimationProps = () => {
+    const dragDirection: 'y' | false = !removeDrag ? 'y' : false;
+
+    const baseProps = {
+      drag: dragDirection,
+      dragConstraints: { top: 0, bottom: 0 },
+      dragElastic: 0.2,
+      dragListener: !disableAnimation && !removeDrag,
+      dragControls,
+      onDragEnd: disableAnimation ? undefined : handleDragEnd,
+      ref: sheetRef,
+    };
+
+    if (disableAnimation) {
+      return {
+        ...baseProps,
+        initial: { y: 0 },
+        animate: { y: 0 },
+        exit: { y: 0 },
+        transition: { duration: 0 },
+      };
+    }
+
+    return {
+      ...baseProps,
+      initial: 'initial',
+      animate: controls,
+      exit: 'exit',
+      variants: mergedAnimation.sheet,
+      transition: mergedAnimation.transition,
+      style: { y },
+    };
   };
 
   return (
@@ -79,57 +180,44 @@ export default function BottomSheet({
       {isOpen && (
         <motion.div
           className="fixed inset-0 z-50 flex items-end justify-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          {...getAnimationProps()}
           onMouseDown={handleBackdropClick}
         >
-          {!removeBg ? (
+          {!removeBg && (
             <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
-          ) : null}
+          )}
 
           <motion.div
             className="relative z-10 max-w-[512px] w-full mx-auto bg-[#140A0A] text-white rounded-t-[42px] outline outline-[#363636] shadow-xl before:content-[''] before:absolute before:bottom-[-256] before:left-0 before:w-full before:h-64 before:bg-[#140A0A]"
-            ref={sheetRef}
-            drag={!removeDrag ? 'y' : null}
-            dragListener={false}
-            dragControls={dragControls}
-            style={{ y }}
-            animate={controls}
-            initial={{ y: 500 }}
-            exit={{ y: 500, transition: { duration: 0.2 } }}
-            onDragEnd={handleDragEnd}
-            dragElastic={0.2}
-            dragConstraints={{ top: 0, bottom: 0 }}
+            {...getSheetAnimationProps()}
           >
-            {/* Перетаскиваемая зона */}
-            {!removeDrag ? (
+            {!removeDrag && (
               <div
                 className="cursor-grab active:cursor-grabbing"
-                onPointerDown={(e) => dragControls.start(e)}
+                onPointerDown={(e) =>
+                  !disableAnimation && dragControls.start(e)
+                }
               >
                 <div className="w-full flex justify-center !pt-3">
                   <div className="before:content-[''] before:block before:w-10 before:h-1.5 before:bg-gray-600 before:rounded-full" />
                 </div>
               </div>
-            ) : null}
+            )}
 
-            {/* Заголовок и кнопка закрытия */}
             <div className="flex items-center justify-between !px-4 !py-4 border-b border-[#363636]">
               <h2 className={`text-lg font-semibold ${titleClassName}`}>
                 {title}
               </h2>
-              {!removeX ? (
+              {!removeX && (
                 <button
                   onClick={onClose}
                   className="!p-2 text-white hover:text-gray-400 cursor-pointer"
                 >
                   <Close fill={'#afafaf'} className="w-6 h-6" />
                 </button>
-              ) : null}
+              )}
             </div>
 
-            {/* Контент */}
             <div className="!px-6 !pb-8 max-h-[70vh] overflow-y-auto">
               {children}
             </div>

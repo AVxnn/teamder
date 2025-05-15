@@ -2,7 +2,6 @@
 
 import { TelegramWebApp } from '@/types/telegram';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import FullPageLoader from '@/components/fullPageLoader';
 import TeamderHeader from '@/components/headers/teamderHeader';
 import SwipeableCardStack from '@/components/SwipeableCardStack';
@@ -20,7 +19,6 @@ declare global {
 export default function HomePage() {
   const { user } = useSnapshot(userStore);
   const [isClient, setIsClient] = useState(false);
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   console.log(isLoading, isClient);
   useEffect(() => {
@@ -29,15 +27,16 @@ export default function HomePage() {
 
   useEffect(() => {
     if (!user || !user.profile || Object.keys(user.profile).length === 0) {
-      router.replace('/tutorial');
+      // router.replace('/tutorial');
     } else {
       setIsLoading(true);
     }
+    setIsLoading(true);
 
     const isTutorialCompleted = localStorage.getItem('tutorial') === 'true';
     console.log(isTutorialCompleted);
     if (!isTutorialCompleted) {
-      router.push('/tutorial');
+      // router.push('/tutorial');
     } else {
     }
   }, [user]);
