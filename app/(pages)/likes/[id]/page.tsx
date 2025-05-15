@@ -36,7 +36,7 @@ export default function LikesUserPage() {
           rating={2400}
           totalGames={2000}
           wins={1200}
-          customField="Новый"
+          losses={200}
           find="Ищу команду для турниров. Дискорд обязателен."
           aboutme="Профессиональный игрок. Люблю стратегии."
         />
