@@ -1,7 +1,6 @@
 import useTelegramWebApp from '@/hooks/useTelegramWebApp';
 import CheckBenefits from '@/public/icons/CheckBenefits';
 import Minus from '@/public/icons/Minus';
-import { useState } from 'react';
 
 type Benefit = {
   label: string;
