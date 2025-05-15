@@ -11,7 +11,7 @@ type CardData = {
   rating: number;
   totalGames: number;
   wins: number;
-  customField: string;
+  losses: number;
   find: string;
   aboutme: string;
   imageUrl?: string;
@@ -26,7 +26,7 @@ const cards: CardData[] = [
     rating: 2400,
     totalGames: 2000,
     wins: 1200,
-    customField: 'Новый',
+    losses: 1200,
     find: 'Ищу команду для турниров. Дискорд обязателен.',
     aboutme: 'Профессиональный игрок. Люблю стратегии.',
     imageUrl: '/img/tutorial/tutorial_1.png',
@@ -39,7 +39,7 @@ const cards: CardData[] = [
     rating: 1800,
     totalGames: 1500,
     wins: 900,
-    customField: 'Старый',
+    losses: 1200,
     find: 'Новичков для обучения. Готов помогать.',
     aboutme: 'Опытный наставник. Играю 5 лет.',
     imageUrl: '/img/tutorial/tutorial_2.png',
@@ -52,7 +52,7 @@ const cards: CardData[] = [
     rating: 2100,
     totalGames: 1800,
     wins: 1100,
-    customField: 'Средний',
+    losses: 1200,
     find: 'Команду для вечерних игр. Без токсиков.',
     aboutme: 'Казуальный игрок. Люблю кооперативы.',
     imageUrl: '/img/tutorial/tutorial_3.png',
