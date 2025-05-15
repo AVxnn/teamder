@@ -73,19 +73,19 @@ export default function ProfilePage() {
           <div className="flex justify-around gap-3 mt-6 !px-4">
             <div
               rel="noopener noreferrer"
-              className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 transition-transform cursor-pointer"
+              className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
             >
               <Book />
             </div>
             <div
               rel="noopener noreferrer"
-              className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 transition-transform cursor-pointer"
+              className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
             >
               <News />
             </div>
             <div
               rel="noopener noreferrer"
-              className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 transition-transform cursor-pointer"
+              className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
             >
               <Settings />
             </div>
@@ -95,7 +95,7 @@ export default function ProfilePage() {
         <div
           onClick={() => router.push('/tutorial')}
           rel="noopener noreferrer"
-          className="bg-[#140A0A] !mt-3 flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 transition-transform cursor-pointer"
+          className="bg-[#140A0A] !mt-3 flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
         >
           Туториал
         </div>

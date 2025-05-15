@@ -1,5 +1,7 @@
+import useTelegramWebApp from '@/hooks/useTelegramWebApp';
 import CheckBenefits from '@/public/icons/CheckBenefits';
 import Minus from '@/public/icons/Minus';
+import { useState } from 'react';
 
 type Benefit = {
   label: string;
@@ -14,6 +16,26 @@ const benefits: Benefit[] = [
 ];
 
 export default function GoldBenefitsCard() {
+  const tgWebApp = useTelegramWebApp();
+
+  const handleBuy = async () => {
+    const response = await fetch('http://localhost:3002/api/create-invoice', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        product: 'stars',
+        amount: 300, // в звездах
+        userId: tgWebApp.initDataUnsafe.user?.id,
+      }),
+    });
+
+    const { invoiceUrl } = await response.json();
+
+    tgWebApp.openTelegramLink(invoiceUrl); // или .openTelegramLink(invoiceUrl)
+    tgWebApp.disableClosingConfirmation()
+    window.Telegram.WebApp.close()
+  };
+
   return (
     <div className="rounded-3xl outline outline-[#363636] bg-[#140A0A] !mt-4 !px-4 !py-4 text-white w-full">
       {/* Заголовок и кнопка */}
@@ -24,7 +46,10 @@ export default function GoldBenefitsCard() {
             GOLD
           </span>
         </div>
-        <button className="bg-indigo-400 text-white text-sm !px-4 !py-1 rounded-full hover:scale-105 transition-transform cursor-pointer">
+        <button
+          onClick={() => handleBuy()}
+          className="bg-indigo-400 text-white text-sm !px-4 !py-1 rounded-full hover:scale-105 transition-transform cursor-pointer"
+        >
           Улучшить
         </button>
       </div>
