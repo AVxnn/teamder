@@ -18,21 +18,24 @@ export default function GoldBenefitsCard() {
   const tgWebApp = useTelegramWebApp();
 
   const handleBuy = async () => {
-    const response = await fetch('http://localhost:3002/api/create-invoice', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        product: 'stars',
-        amount: 300, // в звездах
-        userId: tgWebApp.initDataUnsafe.user?.id,
-      }),
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/payments/create-invoice`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          product: 'stars',
+          amount: 300, // в звездах
+          telegramId: tgWebApp.initDataUnsafe.user?.id,
+        }),
+      },
+    );
 
     const { invoiceUrl } = await response.json();
 
     tgWebApp.openTelegramLink(invoiceUrl); // или .openTelegramLink(invoiceUrl)
-    tgWebApp.disableClosingConfirmation()
-    window.Telegram.WebApp.close()
+    tgWebApp.disableClosingConfirmation();
+    window.Telegram.WebApp.close();
   };
 
   return (

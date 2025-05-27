@@ -22,7 +22,7 @@ const InfoEditBlock = () => {
         className="rounded-[24px] w-full object-cover pointer-events-none"
       />
       <div
-        className="rounded-3xl outline outline-[#363636] text-center bg-[#140A0A] !px-4 !py-4 text-white w-full cursor-pointer hover:scale-102 transition-all"
+        className="rounded-3xl outline outline-[#363636] text-center bg-[#7c87ed] !px-4 !py-4 text-white w-full cursor-pointer hover:scale-102 transition-all"
         onClick={() => {
           router.push('https://t.me/teamder');
         }}

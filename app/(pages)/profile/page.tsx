@@ -11,15 +11,25 @@ import News from '@/public/icons/News';
 import Settings from '@/public/icons/Settings';
 import { useRouter } from 'next/navigation';
 import useTelegramWebApp from '@/hooks/useTelegramWebApp';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { userStore } from '@/store/user';
+import { NavLink } from '@/components/UI/NavLink';
+import SettingsSheet from '@/components/SettingsSheet';
+import NewsSheet from '@/components/NewsSheet';
+import ProfileModerationStatus from '@/components/ProfileModerationStatus';
+import ProfileModerationRejectedSheet from '@/components/ProfileModerationRejectedSheet';
 
 export default function ProfilePage() {
   const router = useRouter();
   const snap = useSnapshot(userStore);
 
   const tgWebApp = useTelegramWebApp();
+
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [newsOpen, setNewsOpen] = useState(false);
+  const [showRejectedSheet, setShowRejectedSheet] = useState(false);
+  const [showStatusModeration, setShowStatusModeration] = useState(true);
 
   useEffect(() => {
     console.log(tgWebApp);
@@ -37,6 +47,15 @@ export default function ProfilePage() {
       tgWebApp.BackButton.hide();
     };
   }, [tgWebApp]);
+
+  useEffect(() => {
+    const val = localStorage.getItem('showStatusModeration');
+    if (snap.user?.profile?.moderationStatus === 'rejected') {
+      setShowStatusModeration(true);
+      localStorage.setItem('showStatusModeration', 'true');
+    } else if (!val) setShowStatusModeration(false);
+  }, [snap.user?.profile?.moderationStatus]);
+
   return (
     <main className="bg-gradient-to-tr flex justify-center from-[#0F0505] to-[#310F0F] h-screen overflow-auto">
       <UserHeader />
@@ -49,6 +68,21 @@ export default function ProfilePage() {
         >
           <h2 className="text-[16px] font-medium !mb-4">Ваш профиль</h2>
         </motion.div>
+        {snap.user?.profile?.moderationStatus && showStatusModeration && (
+          <ProfileModerationStatus
+            status={snap.user.profile.moderationStatus}
+            onClick={() => {
+              if (snap.user.profile.moderationStatus === 'rejected') {
+                localStorage.setItem('showStatusModeration', 'false');
+                setShowRejectedSheet(true);
+              }
+              if (snap.user.profile.moderationStatus === 'approved') {
+                setShowStatusModeration(false);
+                localStorage.setItem('showStatusModeration', 'false');
+              }
+            }}
+          />
+        )}
         <ProfileCard
           nickname={snap.user?.profile?.nickname}
           socialBar
@@ -73,35 +107,64 @@ export default function ProfilePage() {
           className="mx-auto !px-4 text-white rounded-[32px] !mt-3"
         >
           <div className="flex justify-around gap-3 mt-6 !px-4">
-            <div
+            <NavLink
+              href="/tutorial"
               rel="noopener noreferrer"
               className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
             >
               <Book />
-            </div>
+            </NavLink>
             <div
               rel="noopener noreferrer"
               className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
+              onClick={() => setNewsOpen(true)}
             >
               <News />
             </div>
             <div
               rel="noopener noreferrer"
               className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
+              onClick={() => setSettingsOpen(true)}
             >
               <Settings />
             </div>
           </div>
         </motion.div>
         <InfoEditBlock />
-        <div
-          onClick={() => router.push('/tutorial')}
-          rel="noopener noreferrer"
-          className="bg-[#140A0A] !mt-3 flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
-        >
-          Туториал
-        </div>
+        {snap.user?.role === 'admin' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
+            className="mx-auto !px-4 text-white rounded-[32px] !mt-3"
+          >
+            <div className="flex justify-around gap-3 mt-6 !px-4">
+              <NavLink
+                href="/admin/moderation"
+                rel="noopener noreferrer"
+                className="rounded-3xl outline outline-[#363636] text-center bg-[#7c87ed] !px-4 !py-4 text-white w-full cursor-pointer hover:scale-102 transition-all"
+              >
+                Список модерации
+              </NavLink>
+            </div>
+          </motion.div>
+        )}
       </div>
+
+      <SettingsSheet
+        isOpen={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+      />
+      <NewsSheet isOpen={newsOpen} onClose={() => setNewsOpen(false)} />
+      <ProfileModerationRejectedSheet
+        isOpen={showRejectedSheet}
+        onClose={() => setShowRejectedSheet(false)}
+        onCreate={() => {
+          setShowRejectedSheet(false);
+          localStorage.setItem('tutorial', 'true');
+          router.push('/create');
+        }}
+      />
     </main>
   );
 }

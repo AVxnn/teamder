@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import axios from 'axios';
 import { useSnapshot } from 'valtio';
 import { userStore } from '@/store/user';
 import RulesModal from '@/components/sheets/rulesSheet';
@@ -71,7 +70,6 @@ export default function CreateCardPage() {
   const handleChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
-
   const nextStep = async () => {
     setDirection(1); // Устанавливаем направление вперед
     const currentIndex = steps.indexOf(step);
@@ -79,15 +77,23 @@ export default function CreateCardPage() {
     if (step === 'step3') {
       try {
         if (snap?.user?.id) {
-          const response = await axios.post(
-            'http://localhost:3002/api/profile/create',
-            { ...formData, telegramId: snap.user.id },
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/profile/create`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ ...formData, telegramId: snap.user.id }),
+            },
           );
-          if (response.data.success) {
+          const data = await response.json();
+          if (data.success) {
             console.log('✅ Карточка создана');
+            userStore.user.profile = data.profile;
             router.push('/');
           } else {
-            console.error('⚠️ Ошибка создания:', response.data.error);
+            console.error('⚠️ Ошибка создания:', data.error);
             router.push('/');
           }
         }

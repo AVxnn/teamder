@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import NavBarTutorial from '@/components/navbarTutorial';
 import useTelegramWebApp from '@/hooks/useTelegramWebApp';
+import { useSnapshot } from 'valtio';
+import { userStore } from '@/store/user';
 
 type TutorialStep = {
   id: number;
@@ -44,6 +46,7 @@ const tutorialSteps: TutorialStep[] = [
 
 export default function TutorialPage() {
   const router = useRouter();
+  const snap = useSnapshot(userStore);
   const [currentStep, setCurrentStep] = useState(0);
   const [direction, setDirection] = useState<'left' | 'right'>('right');
   const [isMounted, setIsMounted] = useState(false);
@@ -62,8 +65,18 @@ export default function TutorialPage() {
           tgWebApp.BackButton.hide();
         }
       }
-      localStorage.setItem('tutorial', 'true');
-      router.push('/create');
+      if (
+        !snap.user ||
+        !snap.user.profile ||
+        Object.keys(snap.user.profile).length === 0 ||
+        !snap.user.profile?.rating
+      ) {
+        localStorage.setItem('tutorial', 'true');
+        router.push('/create');
+      } else {
+        localStorage.setItem('tutorial', 'false');
+        router.push('/profile');
+      }
     }
   };
 

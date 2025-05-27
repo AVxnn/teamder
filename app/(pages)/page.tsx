@@ -7,6 +7,7 @@ import TeamderHeader from '@/components/headers/teamderHeader';
 import SwipeableCardStack from '@/components/SwipeableCardStack';
 import { useSnapshot } from 'valtio';
 import { userStore } from '@/store/user';
+import { useRouter } from 'next/navigation';
 
 declare global {
   interface Window {
@@ -18,6 +19,7 @@ declare global {
 
 export default function HomePage() {
   const { user } = useSnapshot(userStore);
+  const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   console.log(isLoading, isClient);
@@ -26,8 +28,13 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    if (!user || !user.profile || Object.keys(user.profile).length === 0) {
-      // router.replace('/tutorial');
+    if (
+      !user ||
+      !user.profile ||
+      Object.keys(user.profile).length === 0 ||
+      !user.profile?.rating
+    ) {
+      router.replace('/tutorial');
     } else {
       setIsLoading(true);
     }
@@ -36,7 +43,7 @@ export default function HomePage() {
     const isTutorialCompleted = localStorage.getItem('tutorial') === 'true';
     console.log(isTutorialCompleted);
     if (!isTutorialCompleted) {
-      // router.push('/tutorial');
+      router.push('/tutorial');
     } else {
     }
   }, [user]);

@@ -1,14 +1,8 @@
 import { proxy } from 'valtio'
 // types/user.ts
 
-export interface TelegramUser {
-  telegramId: number;
-  username?: string;
-  firstName?: string;
-  photoUrl?: string;
-  lastLogin?: string;     // ISO-строка (Date на бэке)
-  createdAt?: string;     // ISO-строка
-}
+export type UserRole = 'admin' | 'user' | 'premium';
+export type ModerationStatus = 'pending' | 'approved' | 'rejected';
 
 export interface UserProfile {
   nickname: string;
@@ -22,18 +16,26 @@ export interface UserProfile {
   discordLink?: string;
   steamLink?: string;
   cardImage?: string;     // base64 или URL
+  moderationStatus: ModerationStatus;
+  moderationComment?: string;
+  moderatedAt?: string;
+  moderatedBy?: string;
 }
 
+export interface User {
+  id: string;
+  username: string;
+  first_name: string;
+  lastName?: string;
+  photo_url?: string;
+  lastLogin?: string;     // ISO-строка (Date на бэке)
+  createdAt?: string;     // ISO-строка
+  role: UserRole;
+  profile?: UserProfile;
+  likesGiven?: string[];       // массив ObjectId строк
+  likesReceived?: string[];
+}
 
 export const userStore = proxy({
-  user: {} as {
-    id: string
-    first_name: string
-    last_name: string
-    username: string
-    photo_url: string
-    profile?: UserProfile;
-    likesGiven?: string[];       // массив ObjectId строк
-    likesReceived?: string[];
-  }, // Используем `User` как тип для данных пользователя
+  user: {} as User,
 })

@@ -3,7 +3,6 @@
 import NavBar from '@/components/navbar';
 import useTelegramWebApp from '@/hooks/useTelegramWebApp';
 import { userStore } from '@/store/user';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -53,22 +52,26 @@ export default function RootLayout({
 
     const getUserData = async () => {
       try {
-        const response = await axios.post(
-          'http://localhost:3002/api/auth/telegram-webapp',
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/auth/telegram-webapp`,
           {
-            id: user.id,
-            first_name: user.first_name,
-            last_name: user.last_name,
-            username: user.username,
-            photo_url: user.photo_url,
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id: user.id,
+              first_name: user.first_name,
+              last_name: user.last_name,
+              username: user.username,
+              photo_url: user.photo_url,
+            }),
           },
         );
-        if (response.data.success) {
-          console.log(response.data);
-          userStore.user = response.data.user;
-          console.log('snap', response.data.user);
-        } else {
-          console.error('⚠️ Ошибка создания:', response.data.error);
+        const data = await response.json();
+        if (data.success) {
+          console.log(data);
+          userStore.user = data.user;
         }
       } catch (err) {
         console.error('❌ Ошибка при запросе:', err);

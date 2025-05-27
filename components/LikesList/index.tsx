@@ -100,14 +100,14 @@ export default function LikesList() {
       </div>
 
       <div className="grid grid-cols-2 gap-3  h-[calc(100vh-154px)] !pb-32 overflow-auto !p-0.5">
-        {profiles.map((profile, index: number) => (
+        {profiles.map((profile) => (
           <motion.div
             key={profile.id}
             onClick={() => handlerOpenCard()}
             className="bg-[#1B0B0B] rounded-[32px] !p-4 outline outline-[#363636] cursor-pointer active:scale-95 transition-all"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: `0.${index}` }}
+            transition={{ duration: `0.1` }}
           >
             <div className="flex items-center gap-2 !mb-3">
               <Image
