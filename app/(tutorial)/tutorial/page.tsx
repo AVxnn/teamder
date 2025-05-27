@@ -69,13 +69,12 @@ export default function TutorialPage() {
         !snap.user ||
         !snap.user.profile ||
         Object.keys(snap.user.profile).length === 0 ||
-        localStorage.getItem('tutorial') == 'false' ||
         !snap.user.profile?.rating
       ) {
-        localStorage.setItem('tutorial', 'true');
+        localStorage.setItem('tutorial', 'false');
         router.push('/create');
       } else {
-        localStorage.setItem('tutorial', 'false');
+        localStorage.setItem('tutorial', 'true');
         router.push('/profile');
       }
     }
