@@ -66,36 +66,50 @@ export default function ProfilePage() {
           transition={{ duration: 0.2 }}
           className=""
         >
-          <h2 className="text-[16px] font-medium !mb-4">Ваш профиль</h2>
+          <h2 className="text-[16px] text-[#ffffff] font-medium !mb-4">
+            Ваш профиль
+          </h2>
+          {snap.user?.profile?.moderationStatus &&
+            snap.user?.profile?.moderationStatus !== 'deleted' &&
+            showStatusModeration && (
+              <ProfileModerationStatus
+                status={snap.user.profile.moderationStatus}
+                onClick={() => {
+                  if (snap.user.profile.moderationStatus === 'rejected') {
+                    localStorage.setItem('showStatusModeration', 'false');
+                    setShowRejectedSheet(true);
+                  }
+                  if (snap.user.profile.moderationStatus === 'approved') {
+                    setShowStatusModeration(false);
+                    localStorage.setItem('showStatusModeration', 'false');
+                  }
+                }}
+              />
+            )}
         </motion.div>
-        {snap.user?.profile?.moderationStatus && showStatusModeration && (
-          <ProfileModerationStatus
-            status={snap.user.profile.moderationStatus}
-            onClick={() => {
-              if (snap.user.profile.moderationStatus === 'rejected') {
-                localStorage.setItem('showStatusModeration', 'false');
-                setShowRejectedSheet(true);
-              }
-              if (snap.user.profile.moderationStatus === 'approved') {
-                setShowStatusModeration(false);
-                localStorage.setItem('showStatusModeration', 'false');
-              }
-            }}
+        {snap.user?.profile?.moderationStatus !== 'deleted' ? (
+          <ProfileCard
+            nickname={snap.user?.profile?.nickname}
+            socialBar
+            rating={snap.user?.profile?.rating}
+            hoursPlayed={snap.user?.profile?.hoursPlayed}
+            wins={snap.user?.profile?.wins}
+            losses={snap.user?.profile?.losses}
+            about={snap.user?.profile?.about}
+            lookingFor={snap.user?.profile?.lookingFor}
           />
+        ) : (
+          <></>
         )}
-        <ProfileCard
-          nickname={snap.user?.profile?.nickname}
-          socialBar
-          rating={snap.user?.profile?.rating}
-          totalGames={snap.user?.profile?.hoursPlayed}
-          wins={snap.user?.profile?.wins}
-          losses={snap.user?.profile?.losses}
-          find={snap.user?.profile?.about}
-          aboutme={snap.user?.profile?.lookingFor}
-        />
         <ProfileSlider
-          likes={0}
-          superLikes={0}
+          likes={
+            snap.user?.likesLimit?.dailyLimit -
+            snap.user?.likesLimit?.likesUsedToday
+          }
+          superLikes={
+            snap.user?.superLikesLimit?.dailyLimit -
+            snap.user?.superLikesLimit?.superLikesUsedToday
+          }
           onLikeClick={() => {}}
           onSuperLikeClick={() => {}}
         />
@@ -131,20 +145,35 @@ export default function ProfilePage() {
           </div>
         </motion.div>
         <InfoEditBlock />
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
+          className="text-[16px] !mt-6 text-[#ffffff] font-medium !mb-4"
+        >
+          Админ панель
+        </motion.h2>
         {snap.user?.role === 'admin' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2 }}
-            className="mx-auto !px-4 text-white rounded-[32px] !mt-3"
+            className="mx-auto text-white rounded-[32px] !mt-3"
           >
-            <div className="flex justify-around gap-3 mt-6 !px-4">
+            <div className="flex justify-around gap-3 mt-6">
               <NavLink
                 href="/admin/moderation"
                 rel="noopener noreferrer"
-                className="rounded-3xl outline outline-[#363636] text-center bg-[#7c87ed] !px-4 !py-4 text-white w-full cursor-pointer hover:scale-102 transition-all"
+                className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
               >
                 Список модерации
+              </NavLink>
+              <NavLink
+                href="/admin/moderation"
+                rel="noopener noreferrer"
+                className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
+              >
+                Жалобы
               </NavLink>
             </div>
           </motion.div>

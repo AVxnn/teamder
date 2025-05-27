@@ -1,6 +1,7 @@
 import useTelegramWebApp from '@/hooks/useTelegramWebApp';
 import CheckBenefits from '@/public/icons/CheckBenefits';
 import Minus from '@/public/icons/Minus';
+import { motion } from 'framer-motion';
 
 type Benefit = {
   label: string;
@@ -39,7 +40,12 @@ export default function GoldBenefitsCard() {
   };
 
   return (
-    <div className="rounded-3xl outline outline-[#363636] bg-[#140A0A] !mt-4 !px-4 !py-4 text-white w-full">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2 }}
+      className="rounded-3xl outline outline-[#363636] bg-[#140A0A] !mt-4 !px-4 !py-4 text-white w-full"
+    >
       {/* Заголовок и кнопка */}
       <div className="flex items-center justify-between !mb-4">
         <div className="flex items-center gap-2 text-2xl font-semibold">
@@ -80,6 +86,6 @@ export default function GoldBenefitsCard() {
           </>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }

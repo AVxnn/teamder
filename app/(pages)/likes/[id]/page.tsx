@@ -2,17 +2,67 @@
 
 import TeamderHeader from '@/components/headers/teamderHeader';
 import { MatchPending } from '@/components/MatchPending';
+import { MatchReceived } from '@/components/MatchReceived';
 import ProfileCard from '@/components/profileCard';
 import useTelegramWebApp from '@/hooks/useTelegramWebApp';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState, use } from 'react';
 
-export default function LikesUserPage() {
+type MatchInfo = {
+  likes: {
+    given: {
+      type: 'regular' | 'super';
+      date: string;
+      isMutual: boolean;
+    } | null;
+    received: {
+      type: 'regular' | 'super';
+      date: string;
+      isMutual: boolean;
+    } | null;
+  };
+  isMutual: boolean;
+  mutualType: {
+    fromUser: 'regular' | 'super';
+    toUser: 'regular' | 'super' | 'none';
+  } | null;
+};
+
+type UserProfile = {
+  telegramId: number;
+  username: string;
+  firstName: string;
+  photoUrl: string;
+  profile: {
+    nickname: string;
+    banner: string;
+    about: string;
+    lookingFor: string;
+    rating: number;
+    hoursPlayed: number;
+    wins: number;
+    losses: number;
+  };
+};
+
+type ProfileResponse = {
+  user: UserProfile;
+};
+
+export default function LikesUserPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const resolvedParams = use(params);
   const tgWebApp = useTelegramWebApp();
   const router = useRouter();
+  const [matchInfo, setMatchInfo] = useState<MatchInfo | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log(tgWebApp);
     if (!tgWebApp) return;
 
     if (!tgWebApp.BackButton.isVisible) {
@@ -25,23 +75,109 @@ export default function LikesUserPage() {
     return () => {
       tgWebApp.BackButton.offClick(() => router.push('/likes'));
     };
-  }, [tgWebApp]);
+  }, [tgWebApp, router]);
+
+  useEffect(() => {
+    const fetchMatchInfo = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const telegramId = tgWebApp?.initDataUnsafe?.user?.id;
+        if (!telegramId) {
+          throw new Error('Telegram ID not found');
+        }
+
+        const toTelegramId = parseInt(resolvedParams.id);
+        if (isNaN(toTelegramId)) {
+          throw new Error('Invalid user ID');
+        }
+
+        // Получаем информацию о лайках
+        const matchResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/recommendations/likes-between`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ telegramId, toTelegramId }),
+          },
+        );
+
+        if (!matchResponse.ok) {
+          throw new Error('Failed to fetch match info');
+        }
+
+        const matchData: MatchInfo = await matchResponse.json();
+        setMatchInfo(matchData);
+
+        // Получаем профиль пользователя
+        const profileResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/profile/${toTelegramId}`,
+        );
+
+        if (!profileResponse.ok) {
+          throw new Error('Failed to fetch user profile');
+        }
+
+        const profileData: ProfileResponse = await profileResponse.json();
+        setUserProfile(profileData.user);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load data');
+        console.error('Error fetching data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (tgWebApp) {
+      fetchMatchInfo();
+    }
+  }, [tgWebApp, resolvedParams.id]);
+
+  if (loading) {
+    return (
+      <main className="bg-gradient-to-tr flex justify-center from-[#0F0505] to-[#310F0F] h-screen overflow-auto">
+        <TeamderHeader />
+        <div className="!pt-[84px] !pb-[112px] !px-6 w-full max-w-[560px] overflow-y-scroll">
+          <div className="text-white text-center">Загрузка...</div>
+        </div>
+      </main>
+    );
+  }
+
+  if (error || !userProfile) {
+    return (
+      <main className="bg-gradient-to-tr flex justify-center from-[#0F0505] to-[#310F0F] h-screen overflow-auto">
+        <TeamderHeader />
+        <div className="!pt-[84px] !pb-[112px] !px-6 w-full max-w-[560px] overflow-y-scroll">
+          <div className="text-red-500 text-center">
+            {error || 'Профиль не найден'}
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="bg-gradient-to-tr flex justify-center from-[#0F0505] to-[#310F0F] h-screen overflow-auto">
       <TeamderHeader />
       <div className="!pt-[84px] !pb-[112px] !px-6 w-full max-w-[560px] overflow-y-scroll">
         <ProfileCard
-          nickname="Vxnn"
-          rating={2400}
-          totalGames={2000}
-          wins={1200}
-          losses={200}
-          find="Ищу команду для турниров. Дискорд обязателен."
-          aboutme="Профессиональный игрок. Люблю стратегии."
+          nickname={userProfile.profile.nickname}
+          rating={userProfile.profile.rating}
+          hoursPlayed={userProfile.profile.hoursPlayed}
+          wins={userProfile.profile.wins}
+          losses={userProfile.profile.losses}
+          lookingFor={userProfile.profile.lookingFor}
+          about={userProfile.profile.about}
         />
-        {/* <MatchReceived /> */}
-        <MatchPending />
+        {matchInfo?.isMutual ? (
+          <MatchReceived userId={userProfile.telegramId} />
+        ) : (
+          <MatchPending />
+        )}
       </div>
     </main>
   );

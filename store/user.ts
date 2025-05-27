@@ -2,7 +2,7 @@ import { proxy } from 'valtio'
 // types/user.ts
 
 export type UserRole = 'admin' | 'user' | 'premium';
-export type ModerationStatus = 'pending' | 'approved' | 'rejected';
+export type ModerationStatus = 'pending' | 'approved' | 'rejected' | 'deleted';
 
 export interface UserProfile {
   nickname: string;
@@ -34,6 +34,14 @@ export interface User {
   profile?: UserProfile;
   likesGiven?: string[];       // массив ObjectId строк
   likesReceived?: string[];
+  likesLimit?: {
+    dailyLimit: number;
+    likesUsedToday: number;
+  };
+  superLikesLimit?: {
+    dailyLimit: number;
+    superLikesUsedToday: number;
+  };
 }
 
 export const userStore = proxy({

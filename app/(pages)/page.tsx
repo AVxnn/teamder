@@ -34,9 +34,11 @@ export default function HomePage() {
       Object.keys(user.profile).length === 0 ||
       !user.profile?.rating
     ) {
-      router.replace('/tutorial');
+      // router.replace('/tutorial');
+      return;
     } else {
       setIsLoading(true);
+      return;
     }
     setIsLoading(true);
 

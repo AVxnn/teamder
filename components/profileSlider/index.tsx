@@ -27,7 +27,7 @@ export default function ProfileSlider({
       <div className="flex items-center relative justify-between !px-4 !py-3 bg-[#140A0A] outline outline-[#363636] rounded-[24px] active:scale-105 w-full text-white">
         <div className="flex flex-col gap-3">
           <Like />
-          <span className="text-[14px]">Лайки: {likes}</span>
+          <span className="text-[14px]">Осталось: {likes} Лайков</span>
         </div>
         <button
           onClick={onLikeClick}
@@ -41,7 +41,7 @@ export default function ProfileSlider({
       <div className="flex items-center relative justify-between !px-4 !py-3 bg-[#140A0A] outline outline-[#363636] rounded-[24px] active:scale-105 w-full text-white">
         <div className="flex flex-col gap-3">
           <Star />
-          <span className="text-[14px]">Суперлайки: {superLikes}</span>
+          <span className="text-[14px]">Осталось: {superLikes} СЛайков</span>
         </div>
         <button
           onClick={onSuperLikeClick}

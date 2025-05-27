@@ -7,11 +7,11 @@ import Telegram from '@/public/icons/Telegram';
 type ProfileCardProps = {
   nickname: string;
   rating: number;
-  totalGames: number;
+  hoursPlayed: number;
   wins: number;
   losses: number;
-  find: string;
-  aboutme: string;
+  lookingFor: string;
+  about: string;
   imageUrl?: string;
   discordUrl?: string;
   steamUrl?: string;
@@ -22,11 +22,11 @@ type ProfileCardProps = {
 export default function ProfileCard({
   nickname,
   rating,
-  totalGames,
+  hoursPlayed,
   wins,
   losses,
-  find,
-  aboutme,
+  lookingFor,
+  about,
   imageUrl,
   discordUrl,
   steamUrl,
@@ -63,21 +63,21 @@ export default function ProfileCard({
             </div>
           </div>
           <div className="!mt-3 text-sm text-[#AFAFAF]">
-            О себе: <span className="text-white !ml-1">{aboutme}</span>
+            О себе: <span className="text-white !ml-1">{about}</span>
           </div>
           <div className="!mt-3 text-sm text-[#AFAFAF]">
-            Ищу: <span className="text-white !ml-1">{find}</span>
+            Ищу: <span className="text-white !ml-1">{lookingFor}</span>
           </div>
           <div className="flex justify-between !mt-2">
             <div className="flex flex-col gap-1">
-              <span className="text-[12px] text-[#AFAFAF]">Всего игр:</span>
+              <span className="text-[12px] text-[#AFAFAF]">Всего часов:</span>
               <span className="text-[16px] w-24 text-center outline outline-[#363636] text-white !px-3 !py-1.5 bg-[#140A0A] rounded-full font-medium">
-                {totalGames} игр
+                {hoursPlayed}
               </span>
             </div>
             <div className="flex flex-col  gap-1">
               <span className="text-[12px] text-[#AFAFAF]">Побед:</span>
-              <span className="text-[16px] w-16 text-center outline outline-[#363636] text-white !px-3 !py-1.5 bg-[#140A0A] rounded-full font-medium">
+              <span className="text-[16px] w-18 text-center outline outline-[#363636] text-white !px-3 !py-1.5 bg-[#140A0A] rounded-full font-medium">
                 {wins}
               </span>
             </div>

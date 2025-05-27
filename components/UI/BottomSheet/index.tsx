@@ -188,7 +188,7 @@ export default function BottomSheet({
           )}
 
           <motion.div
-            className="relative z-10 max-w-[512px] w-full mx-auto bg-[#140A0A] text-white rounded-t-[42px] outline outline-[#363636] shadow-xl before:content-[''] before:absolute before:bottom-[-256] before:left-0 before:w-full before:h-64 before:bg-[#140A0A]"
+            className="relative z-10 max-w-[512px] w-full mx-auto bg-[#fff] dark:bg-[#140A0A] text-white rounded-t-[42px] outline outline-[#363636] shadow-xl before:content-[''] before:absolute before:bottom-[-256] before:left-0 before:w-full before:h-64 before:bg-[#140A0A]"
             {...getSheetAnimationProps()}
           >
             {!removeDrag && (

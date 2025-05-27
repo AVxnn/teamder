@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { userStore } from '@/store/user';
+import UserHeader from '@/components/headers/userHeader';
 
 // Типы для профиля и пользователя
 export type UserRole = 'admin' | 'user' | 'premium';
@@ -116,50 +117,53 @@ export default function ModerationPage() {
 
   return (
     <div className="bg-gradient-to-tr from-[#0F0505] to-[#310F0F] h-screen overflow-hidden relative">
-      <h1 className="text-2xl font-bold text-white !mb-6">
-        Модерация карточек
-      </h1>
-      {profiles.length === 0 && (
-        <div className="text-gray-400">Нет карточек на модерацию</div>
-      )}
-      <div className="flex flex-col gap-4">
-        {profiles.map((profile) => (
-          <div
-            key={profile.telegramId}
-            className="bg-[#140A0A] border border-[#363636] rounded-2xl !p-4 flex items-center gap-4"
-          >
-            <img
-              src={profile.profile.avatarUrl || '/default-avatar.png'}
-              alt={profile.firstName}
-              className="w-16 h-16 rounded-full object-cover"
-            />
-            <div className="flex-1">
-              <div className="text-lg font-semibold text-white">
-                {profile.firstName}
+      <UserHeader />
+      <div className="!px-6 !pt-[84px]">
+        <h1 className="text-[16px] text-[#ffffff] font-medium !mb-4">
+          Модерация карточек
+        </h1>
+        {profiles.length === 0 && (
+          <div className="text-gray-400">Нет карточек на модерацию</div>
+        )}
+        <div className="flex flex-col gap-4">
+          {profiles.map((profile) => (
+            <div
+              key={profile.telegramId}
+              className="bg-[#140A0A] border border-[#363636] rounded-2xl !p-4 flex items-center gap-4"
+            >
+              <img
+                src={profile.profile.avatarUrl || '/default-avatar.png'}
+                alt={profile.firstName}
+                className="w-16 h-16 rounded-full object-cover"
+              />
+              <div className="flex-1">
+                <div className="text-lg font-semibold text-white">
+                  {profile.firstName}
+                </div>
+                <div className="text-sm text-gray-400">@{profile.username}</div>
+                <div className="text-sm text-white !mt-2">
+                  {profile.profile.about}
+                </div>
               </div>
-              <div className="text-sm text-gray-400">@{profile.username}</div>
-              <div className="text-sm text-white !mt-2">
-                {profile.profile.about}
+              <div className="flex flex-col gap-2">
+                <button
+                  className="bg-green-600 hover:bg-green-700 text-white !px-4 !py-2 rounded"
+                  disabled={moderating === profile.telegramId}
+                  onClick={() => handleModeration(profile.telegramId, true)}
+                >
+                  Подтвердить
+                </button>
+                <button
+                  className="bg-red-600 hover:bg-red-700 text-white !px-4 !py-2 rounded"
+                  disabled={moderating === profile.telegramId}
+                  onClick={() => handleModeration(profile.telegramId, false)}
+                >
+                  Отклонить
+                </button>
               </div>
             </div>
-            <div className="flex flex-col gap-2">
-              <button
-                className="bg-green-600 hover:bg-green-700 text-white !px-4 !py-2 rounded"
-                disabled={moderating === profile.telegramId}
-                onClick={() => handleModeration(profile.telegramId, true)}
-              >
-                Подтвердить
-              </button>
-              <button
-                className="bg-red-600 hover:bg-red-700 text-white !px-4 !py-2 rounded"
-                disabled={moderating === profile.telegramId}
-                onClick={() => handleModeration(profile.telegramId, false)}
-              >
-                Отклонить
-              </button>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

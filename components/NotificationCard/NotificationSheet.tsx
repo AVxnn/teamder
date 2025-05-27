@@ -92,7 +92,7 @@ export default function NotificationSheet({
 
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose} title="Уведомления">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 !mt-[1px]">
         {loading && (
           <div className="text-white text-center py-4">Загрузка...</div>
         )}

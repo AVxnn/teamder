@@ -3,7 +3,6 @@
 import NavBar from '@/components/navbar';
 import useTelegramWebApp from '@/hooks/useTelegramWebApp';
 import { userStore } from '@/store/user';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function RootLayout({
@@ -13,7 +12,6 @@ export default function RootLayout({
 }>) {
   const [isClient, setIsClient] = useState(false);
   const tgWebApp = useTelegramWebApp();
-  const router = useRouter();
 
   useEffect(() => {
     setIsClient(true);
@@ -22,7 +20,7 @@ export default function RootLayout({
   useEffect(() => {
     const isTutorialCompleted = localStorage.getItem('tutorial') === 'true';
     if (!isTutorialCompleted) {
-      router.push('/tutorial');
+      // router.push('/tutorial');
     } else {
     }
   }, []);
