@@ -22,9 +22,8 @@ type FormData = {
   lookingFor: string;
   steamId: string;
   rating: number;
-  hoursPlayed: number;
-  wins: number;
-  losses: number;
+  preferredRoles: string[];
+  preferredHeroes: string[];
   discordLink: string;
   steamLink: string;
   cardImage: string;
@@ -59,15 +58,14 @@ export default function CreateCardPage() {
     lookingFor: '',
     steamId: '',
     rating: 0,
-    hoursPlayed: 0,
-    wins: 0,
-    losses: 0,
+    preferredRoles: [],
+    preferredHeroes: [],
     discordLink: '',
     steamLink: '',
     cardImage: '',
   });
 
-  const handleChange = (field: keyof FormData, value: string) => {
+  const handleChange = (field: keyof FormData, value: string | string[]) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
   const nextStep = async () => {

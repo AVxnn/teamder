@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import Search from '@/public/icons/Search';
 import Filter from '@/public/icons/Filter';
 import { useRouter } from 'next/navigation';
+import TDImage from '../UI/TDImage';
 
 type User = {
   telegramId: number;
@@ -16,6 +17,7 @@ type User = {
   profile: {
     nickname: string;
     banner: string;
+    cardImage:  string;
   };
 };
 
@@ -155,7 +157,7 @@ export default function LikesList() {
                 <motion.div
                   key={profile.user.telegramId}
                   onClick={() => handlerOpenCard(profile.user.telegramId)}
-                  className="bg-[#1B0B0B] rounded-[32px] !p-4 outline outline-[#363636] cursor-pointer active:scale-95 transition-all"
+                  className="bg-[#1B0B0B] h-fit rounded-[32px] !p-4 outline outline-[#363636] cursor-pointer active:scale-95 transition-all"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.1 }}
@@ -170,12 +172,17 @@ export default function LikesList() {
                     />
                     <span>{profile.user.firstName}</span>
                   </div>
-                  <Image
-                    src={profile.user.profile.banner}
-                    alt="banner"
+
+                  <TDImage
+                    src={
+                      profile.user?.profile?.cardImage
+                        ? process.env.NEXT_PUBLIC_IMAGE_URL + profile.user?.profile?.cardImage
+                        : '/img/tutorial/tutorial_1.png'
+                    }
+                    alt="Profile banner"
                     width={126}
                     height={82}
-                    className="rounded-[24px] w-full max-h-[82px] object-cover"
+                    className="rounded-[24px] object-cover w-full max-h-[82px] pointer-events-none"
                   />
                 </motion.div>
               ),

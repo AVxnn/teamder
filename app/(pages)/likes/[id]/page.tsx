@@ -7,25 +7,12 @@ import ProfileCard from '@/components/profileCard';
 import useTelegramWebApp from '@/hooks/useTelegramWebApp';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, use } from 'react';
+import { MatchLike } from '@/components/MatchLike';
+import { DotaRole, Hero } from '@/store/user';
 
 type MatchInfo = {
-  likes: {
-    given: {
-      type: 'regular' | 'super';
-      date: string;
-      isMutual: boolean;
-    } | null;
-    received: {
-      type: 'regular' | 'super';
-      date: string;
-      isMutual: boolean;
-    } | null;
-  };
-  isMutual: boolean;
-  mutualType: {
-    fromUser: 'regular' | 'super';
-    toUser: 'regular' | 'super' | 'none';
-  } | null;
+  fromUser: boolean;
+  toUser: boolean;
 };
 
 type UserProfile = {
@@ -42,11 +29,22 @@ type UserProfile = {
     hoursPlayed: number;
     wins: number;
     losses: number;
+    preferredRoles: string[];
+    preferredHeroes: Hero[];
+    cardImage: string;
+    steamId?: string;
+    discordLink?: string;
+    steamLink?: string;
   };
 };
 
 type ProfileResponse = {
   user: UserProfile;
+};
+
+// Добавим функцию для проверки, является ли строка DotaRole
+const isDotaRole = (role: string): role is DotaRole => {
+  return ['CARRY', 'MID', 'OFFLANE', 'SOFT_SUPPORT', 'HARD_SUPPORT'].includes(role);
 };
 
 export default function LikesUserPage({
@@ -61,6 +59,7 @@ export default function LikesUserPage({
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showSocials, setShowSocials] = useState(false);
 
   useEffect(() => {
     if (!tgWebApp) return;
@@ -167,16 +166,32 @@ export default function LikesUserPage({
         <ProfileCard
           nickname={userProfile.profile.nickname}
           rating={userProfile.profile.rating}
+          preferredRoles={userProfile.profile.preferredRoles.filter(isDotaRole)}
+          preferredHeroes={userProfile.profile.preferredHeroes}
+          lookingFor={userProfile.profile.lookingFor}
+          about={userProfile.profile.about}
+          imageUrl={userProfile.profile.cardImage}
+          isSocial={showSocials}
+          steamId={userProfile.profile.steamId}
+          discordUrl={userProfile.profile.discordLink}
+          steamLink={userProfile.profile.steamLink}
+          telegramId={userProfile.telegramId}
+          username={userProfile.username}
+          firstName={userProfile.firstName}
+          photoUrl={userProfile.photoUrl}
           hoursPlayed={userProfile.profile.hoursPlayed}
           wins={userProfile.profile.wins}
           losses={userProfile.profile.losses}
-          lookingFor={userProfile.profile.lookingFor}
-          about={userProfile.profile.about}
         />
-        {matchInfo?.isMutual ? (
-          <MatchReceived userId={userProfile.telegramId} />
+        {matchInfo?.fromUser && matchInfo?.toUser ? (
+          <MatchReceived
+            userId={userProfile.telegramId}
+            onShowSocials={setShowSocials}
+          />
+        ) : !matchInfo?.fromUser ? (
+          <MatchLike userId={userProfile.telegramId} />
         ) : (
-          <MatchPending />
+          <MatchPending userId={userProfile.telegramId} />
         )}
       </div>
     </main>

@@ -1,8 +1,21 @@
-import { proxy } from 'valtio'
-// types/user.ts
+import { proxy } from 'valtio';
 
 export type UserRole = 'admin' | 'user' | 'premium';
 export type ModerationStatus = 'pending' | 'approved' | 'rejected' | 'deleted';
+export type DotaRole =
+  | 'CARRY'
+  | 'MID'
+  | 'OFFLANE'
+  | 'SOFT_SUPPORT'
+  | 'HARD_SUPPORT';
+
+export interface Hero {
+  id: number;
+  name: string;
+  localized_name: string;
+  image_url: string;
+  _id: string;
+}
 
 export interface UserProfile {
   nickname: string;
@@ -10,12 +23,11 @@ export interface UserProfile {
   lookingFor: string;
   steamId?: string;
   rating: number;
-  hoursPlayed: number;
-  wins: number;
-  losses: number;
+  preferredRoles: DotaRole[];
+  preferredHeroes: Hero[];
   discordLink?: string;
   steamLink?: string;
-  cardImage?: string;     // base64 или URL
+  cardImage?: string; // base64 или URL
   moderationStatus: ModerationStatus;
   moderationComment?: string;
   moderatedAt?: string;
@@ -28,11 +40,11 @@ export interface User {
   first_name: string;
   lastName?: string;
   photo_url?: string;
-  lastLogin?: string;     // ISO-строка (Date на бэке)
-  createdAt?: string;     // ISO-строка
+  lastLogin?: string; // ISO-строка (Date на бэке)
+  createdAt?: string; // ISO-строка
   role: UserRole;
   profile?: UserProfile;
-  likesGiven?: string[];       // массив ObjectId строк
+  likesGiven?: string[]; // массив ObjectId строк
   likesReceived?: string[];
   likesLimit?: {
     dailyLimit: number;
@@ -46,4 +58,4 @@ export interface User {
 
 export const userStore = proxy({
   user: {} as User,
-})
+});

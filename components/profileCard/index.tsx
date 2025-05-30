@@ -3,36 +3,53 @@ import TDImage from '../UI/TDImage';
 import Steam from '@/public/icons/Steam';
 import Discord from '@/public/icons/Discord';
 import Telegram from '@/public/icons/Telegram';
+import { Hero } from '@/store/user';
 
-type ProfileCardProps = {
+// Определяем тип для ролей
+type DotaRole = 'CARRY' | 'MID' | 'OFFLANE' | 'SOFT_SUPPORT' | 'HARD_SUPPORT';
+
+interface ProfileCardProps {
   nickname: string;
   rating: number;
-  hoursPlayed: number;
-  wins: number;
-  losses: number;
+  preferredRoles: string[];
+  preferredHeroes: Hero[];
   lookingFor: string;
   about: string;
-  imageUrl?: string;
+  imageUrl: string;
+  telegramId: number;
+  username: string;
+  firstName: string;
+  photoUrl: string;
+  isSocial?: boolean;
+  steamId?: string;
   discordUrl?: string;
-  steamUrl?: string;
-  telegramUrl?: string;
-  socialBar?: boolean;
-};
+  steamLink?: string;
+  hoursPlayed?: number;
+  wins?: number;
+  losses?: number;
+}
 
-export default function ProfileCard({
+const DOTA_ROLES: Record<DotaRole, string> = {
+  CARRY: 'Керри',
+  MID: 'Мид',
+  OFFLANE: 'Оффлейн',
+  SOFT_SUPPORT: 'Саппорт 4',
+  HARD_SUPPORT: 'Саппорт 5',
+} as const;
+
+const ProfileCard: React.FC<ProfileCardProps> = ({
   nickname,
   rating,
-  hoursPlayed,
-  wins,
-  losses,
+  preferredRoles,
+  preferredHeroes,
   lookingFor,
   about,
   imageUrl,
+  isSocial = false,
   discordUrl,
-  steamUrl,
-  telegramUrl,
-  socialBar,
-}: ProfileCardProps) {
+  steamLink,
+  username,
+}) => {
   return (
     <>
       <motion.div
@@ -43,8 +60,11 @@ export default function ProfileCard({
       >
         <div className="rounded-xl overflow-hidden">
           <TDImage
-            useNextImage
-            src={imageUrl || '/img/tutorial/tutorial_1.png'}
+            src={
+              imageUrl
+                ? process.env.NEXT_PUBLIC_IMAGE_URL + imageUrl
+                : '/img/tutorial/tutorial_1.png'
+            }
             alt="Profile banner"
             width={600}
             height={166}
@@ -70,27 +90,47 @@ export default function ProfileCard({
           </div>
           <div className="flex justify-between !mt-2">
             <div className="flex flex-col gap-1">
-              <span className="text-[12px] text-[#AFAFAF]">Всего часов:</span>
+              <span className="text-[12px] text-[#AFAFAF]">Любимые герои:</span>
+              <div className="flex gap-2">
+                {preferredHeroes?.slice(0, 3).map((hero, index) => (
+                  <div
+                    key={index}
+                    className="w-8 h-8 rounded-full overflow-hidden outline outline-[#363636]"
+                  >
+                    <TDImage
+                      src={hero.image_url}
+                      alt={hero.localized_name}
+                      width={32}
+                      height={32}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-[12px] text-[#AFAFAF]">Роли:</span>
+              <div className="flex flex-wrap gap-1">
+                {preferredRoles?.map((role, index) => (
+                  <span
+                    key={index}
+                    className="text-[12px] text-center outline outline-[#363636] text-white !px-2 !py-1 bg-[#140A0A] rounded-full"
+                  >
+                    {DOTA_ROLES[role as DotaRole] || role}
+                  </span>
+                ))}
+              </div>
+            </div>
+            {/* <div className="flex flex-col gap-1">
+              <span className="text-[12px] text-[#AFAFAF]">Рейтинг:</span>
               <span className="text-[16px] w-24 text-center outline outline-[#363636] text-white !px-3 !py-1.5 bg-[#140A0A] rounded-full font-medium">
-                {hoursPlayed}
+                {rating}
               </span>
-            </div>
-            <div className="flex flex-col  gap-1">
-              <span className="text-[12px] text-[#AFAFAF]">Побед:</span>
-              <span className="text-[16px] w-18 text-center outline outline-[#363636] text-white !px-3 !py-1.5 bg-[#140A0A] rounded-full font-medium">
-                {wins}
-              </span>
-            </div>
-            <div className="flex flex-col  gap-1">
-              <span className="text-[12px] text-[#AFAFAF]">Поражений:</span>
-              <span className="text-[16px] w-24 text-center outline outline-[#363636] text-white !px-3 !py-1.5 bg-[#140A0A] rounded-full font-medium">
-                {losses}
-              </span>
-            </div>
+            </div> */}
           </div>
         </div>
       </motion.div>
-      {socialBar ? (
+      {isSocial ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -107,7 +147,7 @@ export default function ProfileCard({
               <Discord />
             </a>
             <a
-              href={steamUrl}
+              href={steamLink}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
@@ -115,7 +155,7 @@ export default function ProfileCard({
               <Steam />
             </a>
             <a
-              href={telegramUrl}
+              href={`https://t.me/${username}`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
@@ -127,4 +167,6 @@ export default function ProfileCard({
       ) : null}
     </>
   );
-}
+};
+
+export default ProfileCard;

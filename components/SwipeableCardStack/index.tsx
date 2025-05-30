@@ -5,17 +5,18 @@ import { motion, useMotionValue, useAnimation } from 'framer-motion';
 import { wrap } from 'popmotion';
 import ProfileCard from '../profileCard';
 import { ActionButtons } from '../ActionButtons';
-import RecommendationFilters from '../RecommendationFilters';
+import { DotaRole, Hero } from '@/store/user';
+import FilterSheet from '../sheets/FilterSheet';
+import { useDebounce } from '@/hooks/useDebounce';
 
 type ProfileData = {
   nickname: string;
   rating: number;
-  hoursPlayed: number;
-  wins: number;
-  losses: number;
+  preferredRoles: DotaRole[];
+  preferredHeroes: Hero[];
   lookingFor: string;
   about: string;
-  banner?: string;
+  imageUrl?: string;
   discordUrl?: string;
   steamUrl?: string;
   telegramUrl?: string;
@@ -29,18 +30,31 @@ type CardData = {
 type Filters = {
   minRating?: number;
   maxRating?: number;
-  minGamesPlayed?: number;
-  maxGamesPlayed?: number;
-  lookingFor?: string;
+  preferredRoles?: DotaRole[];
+  preferredHeroes?: Hero[];
 };
 
-export default function SwipeableCardStack() {
+interface Props {
+  showFilters: boolean;
+  onFiltersChange: (filters: Filters) => void;
+  currentFilters: Filters;
+  setShowFilters: (show: boolean) => void;
+}
+
+export default function SwipeableCardStack({
+  showFilters,
+  onFiltersChange,
+  currentFilters = {},
+  setShowFilters,
+}: Props) {
   const [cards, setCards] = useState<CardData[]>([]);
   const [index, setIndex] = useState(0);
-  const [filters, setFilters] = useState<Filters>({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showFilters, setShowFilters] = useState(false);
+  const [localFilters, setLocalFilters] = useState<Filters>(currentFilters);
+
+  // Используем наш кастомный хук для дебаунса фильтров
+  const debouncedFilters = useDebounce(localFilters, 500);
 
   const currentCard = cards[wrap(0, cards.length, index)];
   const nextCard = cards[wrap(0, cards.length, index + 1)];
@@ -49,8 +63,8 @@ export default function SwipeableCardStack() {
   const y = useMotionValue(0);
   const controls = useAnimation();
 
-  // Загрузка рекомендаций
-  const fetchRecommendations = async () => {
+  // Функция загрузки рекомендаций
+  const fetchRecommendations = async (filters: Filters) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -69,11 +83,10 @@ export default function SwipeableCardStack() {
           },
           body: JSON.stringify({
             telegramId,
-            minRating: filters.minRating,
-            maxRating: filters.maxRating,
-            minGamesPlayed: filters.minGamesPlayed,
-            maxGamesPlayed: filters.maxGamesPlayed,
-            lookingFor: filters.lookingFor,
+            minRating: filters?.minRating,
+            maxRating: filters?.maxRating,
+            preferredRoles: filters?.preferredRoles || [],
+            preferredHeroes: filters?.preferredHeroes?.map((h) => h._id) || [],
           }),
         },
       );
@@ -94,6 +107,16 @@ export default function SwipeableCardStack() {
       setIsLoading(false);
     }
   };
+
+  // Эффект для загрузки рекомендаций при изменении дебаунснутых фильтров
+  useEffect(() => {
+    fetchRecommendations(debouncedFilters);
+  }, [debouncedFilters]);
+
+  // Эффект для синхронизации локальных фильтров с пропсами
+  useEffect(() => {
+    setLocalFilters(currentFilters);
+  }, [currentFilters]);
 
   // Обработка лайка
   const handleLike = async () => {
@@ -154,10 +177,6 @@ export default function SwipeableCardStack() {
       // Здесь можно добавить уведомление об ошибке
     }
   };
-
-  useEffect(() => {
-    fetchRecommendations();
-  }, [filters]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleDragEnd = async (_: any, info: any) => {
@@ -241,45 +260,43 @@ export default function SwipeableCardStack() {
 
   if (!cards.length) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <div className="text-white">Нет доступных рекомендаций</div>
-      </div>
+      <>
+        <div className="flex items-center justify-center h-full">
+          <div className="text-white">Нет доступных рекомендаций</div>
+        </div>
+
+        <FilterSheet
+          isOpen={showFilters}
+          onClose={() => setShowFilters(false)}
+          onFiltersChange={onFiltersChange}
+          currentFilters={currentFilters}
+          setShowFilters={setShowFilters}
+        />
+      </>
     );
   }
 
   return (
     <div className="relative max-w-md mx-auto w-full">
-      {/* Кнопка фильтров */}
-      <button
-        onClick={() => setShowFilters(!showFilters)}
-        className="absolute top-4 right-4 z-20 bg-[#1a1a1a] p-2 rounded-xl text-white hover:bg-[#2a2a2a] transition-colors"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-          />
-        </svg>
-      </button>
-
-      {/* Панель фильтров */}
-      {showFilters && (
-        <div className="absolute top-16 right-4 z-20 w-72">
-          <RecommendationFilters onFiltersChange={setFilters} />
-        </div>
-      )}
+      <FilterSheet
+        isOpen={showFilters}
+        onClose={() => setShowFilters(false)}
+        onFiltersChange={onFiltersChange}
+        currentFilters={currentFilters}
+        setShowFilters={setShowFilters}
+      />
 
       <div className="relative max-w-md mx-auto">
         <div className="absolute inset-0 z-0 scale-95 bottom-[0px] !mt-4 opacity-50 blur-[2px] pointer-events-none">
-          <ProfileCard socialBar={false} {...nextCard.profile} />
+          <ProfileCard
+            isSocial={false}
+            telegramId={0}
+            username=""
+            firstName=""
+            imageUrl=""
+            photoUrl=""
+            {...nextCard.profile}
+          />
         </div>
 
         <motion.div
@@ -290,7 +307,15 @@ export default function SwipeableCardStack() {
           onDragEnd={handleDragEnd}
           dragConstraints={{ left: 0, right: 0 }}
         >
-          <ProfileCard socialBar={false} {...currentCard.profile} />
+          <ProfileCard
+            isSocial={false}
+            telegramId={0}
+            username=""
+            firstName=""
+            imageUrl=""
+            photoUrl=""
+            {...currentCard.profile}
+          />
         </motion.div>
       </div>
 

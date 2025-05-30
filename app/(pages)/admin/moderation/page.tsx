@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { userStore } from '@/store/user';
+import { DotaRole, Hero, userStore } from '@/store/user';
 import UserHeader from '@/components/headers/userHeader';
+import ProfileCard from '@/components/profileCard';
 
 // Типы для профиля и пользователя
 export type UserRole = 'admin' | 'user' | 'premium';
@@ -18,9 +19,8 @@ interface Profile {
   lookingFor?: string;
   steamId?: string;
   rating?: number;
-  hoursPlayed?: number;
-  wins?: number;
-  losses?: number;
+  preferredRoles?: string[];
+  preferredHeroes?: string[];
   discordLink?: string;
   steamLink?: string;
   cardImage?: string;
@@ -125,40 +125,67 @@ export default function ModerationPage() {
         {profiles.length === 0 && (
           <div className="text-gray-400">Нет карточек на модерацию</div>
         )}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 overflow-auto h-[calc(100vh-120px)] !pb-[90px">
           {profiles.map((profile) => (
             <div
               key={profile.telegramId}
-              className="bg-[#140A0A] border border-[#363636] rounded-2xl !p-4 flex items-center gap-4"
+              className="bg-[#140A0A] border border-[#363636] rounded-2xl !p-4"
             >
-              <img
-                src={profile.profile.avatarUrl || '/default-avatar.png'}
-                alt={profile.firstName}
-                className="w-16 h-16 rounded-full object-cover"
-              />
-              <div className="flex-1">
-                <div className="text-lg font-semibold text-white">
-                  {profile.firstName}
-                </div>
-                <div className="text-sm text-gray-400">@{profile.username}</div>
-                <div className="text-sm text-white !mt-2">
-                  {profile.profile.about}
+              {/* Информация о пользователе */}
+              <div className="flex items-center gap-4 !mb-4">
+                <img
+                  src={profile.photoUrl || '/default-avatar.png'}
+                  alt={profile.firstName}
+                  className="w-8 h-8 rounded-full object-cover"
+                />
+                <div>
+                  <div className="text-lg font-semibold text-white">
+                    {profile.firstName}
+                  </div>
+                  <div className="text-sm text-gray-400">
+                    @{profile.username}
+                  </div>
                 </div>
               </div>
-              <div className="flex flex-col gap-2">
+
+              {/* Карточка профиля */}
+              <div className="!mb-4">
+                <ProfileCard
+                  telegramId={+profile.telegramId}
+                  username={profile.username}
+                  firstName={profile.firstName}
+                  photoUrl={profile.photoUrl}
+                  nickname={profile.profile.nickname}
+                  rating={profile.profile.rating}
+                  preferredRoles={profile.profile.preferredRoles as DotaRole[]}
+                  preferredHeroes={
+                    profile.profile.preferredHeroes as unknown as Hero[]
+                  }
+                  lookingFor={profile.profile.lookingFor}
+                  about={profile.profile.about}
+                  imageUrl={profile.profile.cardImage}
+                />
+              </div>
+
+              {/* Кнопки модерации */}
+              <div className="flex gap-2">
                 <button
-                  className="bg-green-600 hover:bg-green-700 text-white !px-4 !py-2 rounded"
-                  disabled={moderating === profile.telegramId}
-                  onClick={() => handleModeration(profile.telegramId, true)}
-                >
-                  Подтвердить
-                </button>
-                <button
-                  className="bg-red-600 hover:bg-red-700 text-white !px-4 !py-2 rounded"
+                  className="flex-1 bg-[#140A0A] text-white flex justify-center text-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
                   disabled={moderating === profile.telegramId}
                   onClick={() => handleModeration(profile.telegramId, false)}
                 >
-                  Отклонить
+                  {moderating === profile.telegramId
+                    ? 'Загрузка...'
+                    : 'Отклонить'}
+                </button>
+                <button
+                  className="flex-1 bg-[#7C87ED] text-white justify-center text-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
+                  disabled={moderating === profile.telegramId}
+                  onClick={() => handleModeration(profile.telegramId, true)}
+                >
+                  {moderating === profile.telegramId
+                    ? 'Загрузка...'
+                    : 'Подтвердить'}
                 </button>
               </div>
             </div>

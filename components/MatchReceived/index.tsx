@@ -8,9 +8,10 @@ import { useState } from 'react';
 
 type Props = {
   userId: number;
+  onShowSocials: (show: boolean) => void;
 };
 
-export const MatchReceived = ({ userId }: Props) => {
+export const MatchReceived = ({ userId, onShowSocials }: Props) => {
   const router = useRouter();
   const tgWebApp = useTelegramWebApp();
   const [isLoading, setIsLoading] = useState(false);
@@ -41,7 +42,6 @@ export const MatchReceived = ({ userId }: Props) => {
         throw new Error('Failed to dislike user');
       }
 
-      // После успешного дизлайка возвращаемся на страницу лайков
       router.push('/likes');
     } catch (error) {
       console.error('Error disliking user:', error);
@@ -57,12 +57,12 @@ export const MatchReceived = ({ userId }: Props) => {
         Вас лайкнули в ответ
       </div>
       <div className="flex gap-2">
-        <div
-          rel="noopener noreferrer"
+        <button
+          onClick={() => onShowSocials(true)}
           className="bg-[#7C87ED] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 transition-transform cursor-pointer"
         >
           Открыть соц.сети
-        </div>
+        </button>
         <button
           onClick={handleDislike}
           disabled={isLoading}

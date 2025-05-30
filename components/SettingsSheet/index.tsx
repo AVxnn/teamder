@@ -3,6 +3,7 @@ import BottomSheet from '@/components/UI/BottomSheet';
 import Shield from '@/public/icons/Shield';
 import App from '@/public/icons/App';
 import { useRouter } from 'next/navigation';
+import { userStore } from '@/store/user';
 
 const switchBase =
   'relative inline-flex items-center h-6 rounded-full w-11 transition-colors focus:outline-none';
@@ -44,7 +45,15 @@ export default function SettingsSheet({
         throw new Error('Failed to delete profile');
       }
 
-      // Закрываем модальное окно и обновляем страницу
+      const data = await response.json();
+
+      if (data.success) {
+        // Обновляем статус модерации в userStore
+        if (userStore.user.profile) {
+          userStore.user.profile.moderationStatus = "deleted";
+        }
+      }
+
       onClose();
       router.refresh();
     } catch (error) {

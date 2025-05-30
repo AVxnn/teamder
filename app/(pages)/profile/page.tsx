@@ -19,6 +19,7 @@ import SettingsSheet from '@/components/SettingsSheet';
 import NewsSheet from '@/components/NewsSheet';
 import ProfileModerationStatus from '@/components/ProfileModerationStatus';
 import ProfileModerationRejectedSheet from '@/components/ProfileModerationRejectedSheet';
+import Link from 'next/link';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -69,8 +70,15 @@ export default function ProfilePage() {
           <h2 className="text-[16px] text-[#ffffff] font-medium !mb-4">
             Ваш профиль
           </h2>
-          {snap.user?.profile?.moderationStatus &&
-            snap.user?.profile?.moderationStatus !== 'deleted' &&
+          {snap.user?.profile?.moderationStatus === 'deleted' ? (
+            <Link
+              href="/create"
+              className="bg-[#140A0A] text-white flex justify-center items-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
+            >
+              Создать карточку
+            </Link>
+          ) : (
+            snap.user?.profile?.moderationStatus &&
             showStatusModeration && (
               <ProfileModerationStatus
                 status={snap.user.profile.moderationStatus}
@@ -85,18 +93,25 @@ export default function ProfilePage() {
                   }
                 }}
               />
-            )}
+            )
+          )}
         </motion.div>
         {snap.user?.profile?.moderationStatus !== 'deleted' ? (
           <ProfileCard
+            isSocial={false}
+            telegramId={0}
+            username=""
+            firstName=""
+            photoUrl=""
             nickname={snap.user?.profile?.nickname}
-            socialBar
             rating={snap.user?.profile?.rating}
-            hoursPlayed={snap.user?.profile?.hoursPlayed}
-            wins={snap.user?.profile?.wins}
-            losses={snap.user?.profile?.losses}
-            about={snap.user?.profile?.about}
+            preferredRoles={[...(snap.user?.profile?.preferredRoles || [])]}
+            preferredHeroes={[...(snap.user?.profile?.preferredHeroes || [])]}
             lookingFor={snap.user?.profile?.lookingFor}
+            about={snap.user?.profile?.about}
+            imageUrl={snap.user?.profile?.cardImage}
+            discordUrl={snap.user?.profile?.discordLink}
+            steamLink={snap.user?.profile?.steamLink}
           />
         ) : (
           <></>
@@ -164,14 +179,14 @@ export default function ProfilePage() {
               <NavLink
                 href="/admin/moderation"
                 rel="noopener noreferrer"
-                className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
+                className="bg-[#140A0A] flex justify-center text-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
               >
-                Список модерации
+                Карточки
               </NavLink>
               <NavLink
                 href="/admin/moderation"
                 rel="noopener noreferrer"
-                className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
+                className="bg-[#140A0A] flex justify-center text-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
               >
                 Жалобы
               </NavLink>
