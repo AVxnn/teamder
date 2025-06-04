@@ -5,19 +5,18 @@ import { useEffect } from 'react';
 
 export default function TelegramFullscreen() {
   const tgWebApp = useTelegramWebApp();
+
   useEffect(() => {
-    // Проверяем, что мы в Telegram WebApp
-    if (typeof window !== 'undefined' && tgWebApp) {
-      // Развернуть на весь экран при загрузке
-      tgWebApp.expand(); // Сначала расширяем WebApp
-      tgWebApp.requestFullscreen(); // Затем запрашиваем полноэкранный режим
+    if (!tgWebApp) return;
 
-      // Можно вернуть функцию очистки, если нужно
-      return () => {
-        // Любая очистка при размонтировании
-      };
+    try {
+      tgWebApp.expand(); // Разворачиваем WebApp
+      tgWebApp.disableVerticalSwipes();
+      tgWebApp.requestFullscreen(); // Запрашиваем fullscreen
+    } catch (err) {
+      console.error('Error while expanding Telegram WebApp:', err);
     }
-  }, []);
+  }, [tgWebApp]);
 
-  return null; // Или верните кнопку для ручного управления
+  return null;
 }

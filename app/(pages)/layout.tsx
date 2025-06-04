@@ -84,7 +84,7 @@ export default function RootLayout({
   }, [isClient]);
 
   return (
-    <div className="h-screen ">
+    <div className="h-screen !pt-[100px] bg-[#ddd]">
       {children}
       <NavBar />
     </div>

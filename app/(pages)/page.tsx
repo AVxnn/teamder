@@ -79,7 +79,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className="bg-gradient-to-tr from-[#0F0505] to-[#310F0F] h-screen overflow-hidden relative">
+    <main className="h-[calc(100vh-100px)] overflow-hidden relative">
       <TeamderHeader />
 
       {/* Кнопка фильтров */}

@@ -56,7 +56,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
-        className="mx-auto outline outline-[#363636] bg-[#140A0A] !p-4 text-white rounded-[32px] shadow-2xl"
+        className="mx-auto outline outline-[#363636] bg-[#ddd] !p-4 text-white rounded-[32px] shadow-2xl"
       >
         <div className="rounded-xl overflow-hidden">
           <TDImage
@@ -74,11 +74,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         <div className="!mt-3 space-y-2">
           <div className="flex justify-between">
             <div className="flex text-sm">
-              <span className="text-[#AFAFAF] !mr-1">Никнейм: </span>
+              <span className="text-[#444] !mr-1">Никнейм: </span>
               <span>{nickname}</span>
             </div>
             <div className="flex text-sm">
-              <span className="text-[#AFAFAF] !mr-1">Рейтинг: </span>
+              <span className="text-[#444] !mr-1">Рейтинг: </span>
               <span>{rating}</span>
             </div>
           </div>
