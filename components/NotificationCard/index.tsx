@@ -6,8 +6,8 @@ import React from 'react';
 const icons = {
   waiting: (
     <svg
-      width="28"
-      height="28"
+      width="20"
+      height="20"
       viewBox="0 0 28 28"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -22,8 +22,8 @@ const icons = {
   ),
   like: (
     <svg
-      width="24"
-      height="24"
+      width="20"
+      height="20"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -36,8 +36,8 @@ const icons = {
   ),
   superlike: (
     <svg
-      width="26"
-      height="26"
+      width="20"
+      height="20"
       viewBox="0 0 26 26"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -50,8 +50,8 @@ const icons = {
   ),
   'moderation-fail': (
     <svg
-      width="28"
-      height="28"
+      width="20"
+      height="20"
       viewBox="0 0 28 28"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -64,8 +64,8 @@ const icons = {
   ),
   'moderation-success': (
     <svg
-      width="28"
-      height="28"
+      width="20"
+      height="20"
       viewBox="0 0 28 28"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -78,8 +78,8 @@ const icons = {
   ),
   'profile-deleted': (
     <svg
-      width="26"
-      height="24"
+      width="20"
+      height="20"
       viewBox="0 0 22 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -124,23 +124,43 @@ interface NotificationCardProps {
   user?: { name: string; avatar: string };
   title: string;
   message?: string;
+  createdAt?: string; // Дата создания уведомления
 }
+
+// Функция для форматирования даты в формат 21:00 05/07/25
+const formatDate = (dateString?: string): string => {
+  if (!dateString) return '';
+
+  try {
+    const date = new Date(dateString);
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear().toString().slice(-2);
+
+    return `${hours}:${minutes} ${day}/${month}/${year}`;
+  } catch {
+    return '';
+  }
+};
 
 export default function NotificationCard({
   type,
   user,
   title,
   message,
+  createdAt,
 }: NotificationCardProps) {
   return (
     <div
-      className={`flex items-center rounded-3xl outline outline-[#363636] !px-4 !py-5 !mb-3 ${bgMap[type]} relative`}
+      className={`flex items-center rounded-3xl outline outline-[#363636] !px-4 !py-3 !mb-3 ${bgMap[type]} relative`}
     >
       {user ? (
         <img
           src={user.avatar}
           alt={user.name}
-          className="w-12 h-12 rounded-full object-cover !mr-4 border-2 border-[#363636]"
+          className="w-10 h-10 rounded-full object-cover !mr-4 border-2 border-[#363636]"
         />
       ) : (
         <>
@@ -154,7 +174,7 @@ export default function NotificationCard({
       )}
 
       <div className="flex-1 min-w-0">
-        <div className="text-base font-semibold text-white truncate">
+        <div className="text-[14px] font-semibold text-white truncate">
           {user ? user.name : title}
           {type === 'waiting' ||
           type === 'moderation-success' ||
@@ -163,11 +183,17 @@ export default function NotificationCard({
             ? 'Ваша карточка'
             : null}
         </div>
-        <div className={`text-sm text-[#AFAFAF] truncate`}>
+        <div className={`text-[14px] text-[#AFAFAF] truncate`}>
           {user ? title : message}
         </div>
         {!user && !message && (
           <div className="text-sm text-white/80 truncate">{title}</div>
+        )}
+        {/* Дата создания уведомления */}
+        {createdAt && (
+          <div className="text-[12px] mt-2 text-gray-500">
+            {formatDate(createdAt)}
+          </div>
         )}
       </div>
 

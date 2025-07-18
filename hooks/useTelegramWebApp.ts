@@ -1,14 +1,22 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
+import { TelegramWebApp } from '@/types/telegram';
 
 export default function useTelegramWebApp() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [webApp, setWebApp] = useState<any>(null)
+  const [webApp, setWebApp] = useState<TelegramWebApp | null>(null);
+  const [isTelegramWebApp, setIsTelegramWebApp] = useState(false);
+  const [platform, setPlatform] = useState<string>('');
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
-      setWebApp(window.Telegram.WebApp)
-    }
-  }, [])
+      const tgWebApp = window.Telegram.WebApp;
+      setWebApp(tgWebApp);
 
-  return webApp
+      // Проверяем, что это действительно Telegram WebApp
+      const isTgWebApp = tgWebApp.platform && tgWebApp.platform !== 'unknown';
+      setIsTelegramWebApp(isTgWebApp);
+      setPlatform(tgWebApp.platform || 'unknown');
+    }
+  }, []);
+
+  return { webApp, isTelegramWebApp, platform };
 }

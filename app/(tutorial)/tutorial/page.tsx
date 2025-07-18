@@ -50,7 +50,7 @@ export default function TutorialPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [direction, setDirection] = useState<'left' | 'right'>('right');
   const [isMounted, setIsMounted] = useState(false);
-  const tgWebApp = useTelegramWebApp();
+  const { webApp: tgWebApp } = useTelegramWebApp();
 
   useEffect(() => {
     setIsMounted(true);

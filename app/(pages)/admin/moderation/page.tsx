@@ -125,7 +125,7 @@ export default function ModerationPage() {
         {profiles.length === 0 && (
           <div className="text-gray-400">Нет карточек на модерацию</div>
         )}
-        <div className="flex flex-col gap-4 overflow-auto h-[calc(100vh-120px)] !pb-[90px">
+        <div className="flex flex-col gap-4 overflow-auto h-[calc(100vh-120px)] !pb-[110px]">
           {profiles.map((profile) => (
             <div
               key={profile.telegramId}

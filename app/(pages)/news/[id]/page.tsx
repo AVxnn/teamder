@@ -9,18 +9,15 @@ export default function NewsPage() {
   if (!news) return notFound();
 
   return (
-    <div className="min-h-screen bg-gradient-to-tr from-gray-100 to-gray-200 dark:from-[#0F0505] dark:to-[#310F0F] flex justify-center items-center px-4">
-      <div className="max-w-xl w-full bg-white dark:bg-[#140A0A] rounded-3xl border border-gray-200 dark:border-[#363636] p-8 text-gray-900 dark:text-white shadow-xl">
-        <div className="flex items-center gap-4 mb-4">
-          <div className="w-12 h-12 rounded-full bg-[#7C87ED] flex-shrink-0" />
-          <div>
-            <div className="text-2xl font-bold mb-1">{news.title}</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              {news.date}
-            </div>
+    <div className="min-h-screen bg-gradient-to-tr from-[#0F0505] to-[#310F0F] flex justify-center items-center px-4">
+      <div className="max-w-xl w-full bg-[#140A0A] rounded-3xl border border-[#363636] p-8 text-white shadow-xl">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">{news.title}</h1>
+          <div className="text-xs text-gray-400 mb-6">
+            {new Date(news.date).toLocaleDateString('ru-RU')}
           </div>
+          <p className="text-gray-300 leading-relaxed">{news.content}</p>
         </div>
-        <div className="text-base whitespace-pre-line mt-4">{news.content}</div>
       </div>
     </div>
   );

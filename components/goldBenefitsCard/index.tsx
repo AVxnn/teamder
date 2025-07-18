@@ -16,7 +16,7 @@ const benefits: Benefit[] = [
 ];
 
 export default function GoldBenefitsCard() {
-  const tgWebApp = useTelegramWebApp();
+  const { webApp: tgWebApp } = useTelegramWebApp();
 
   const handleBuy = async () => {
     const response = await fetch(

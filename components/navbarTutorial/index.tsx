@@ -26,7 +26,7 @@ const NavBarTutorial = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const snap = useSnapshot(userStore);
   const pathname = usePathname();
-  const tgWebApp = useTelegramWebApp();
+  const { webApp: tgWebApp } = useTelegramWebApp();
 
   const [animatedSteps, setAnimatedSteps] = useState<number[]>([1]);
 

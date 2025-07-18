@@ -4,6 +4,7 @@ import NavBar from '@/components/navbar';
 import useTelegramWebApp from '@/hooks/useTelegramWebApp';
 import { userStore } from '@/store/user';
 import { useEffect, useState } from 'react';
+import { shouldApplyFullscreen } from '@/utils/telegramUtils';
 
 export default function RootLayout({
   children,
@@ -11,7 +12,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [isClient, setIsClient] = useState(false);
-  const tgWebApp = useTelegramWebApp();
+  const { webApp: tgWebApp } = useTelegramWebApp();
 
   useEffect(() => {
     setIsClient(true);
@@ -30,20 +31,18 @@ export default function RootLayout({
       tgWebApp.disableVerticalSwipes();
       tgWebApp.ready();
     }
-  }, []);
+  }, [tgWebApp]);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && tgWebApp) {
-      if (!tgWebApp) {
-        tgWebApp?.expand();
+      tgWebApp?.expand();
 
-        tgWebApp.setBackgroundColor('#140A0A');
-        tgWebApp.headerColor = '#140A0A';
-        tgWebApp.ready();
+      tgWebApp.setBackgroundColor('#140A0A');
+      tgWebApp.headerColor = '#140A0A';
+      tgWebApp.ready();
 
-        tgWebApp.enableClosingConfirmation();
-        tgWebApp.requestFullscreen();
-      }
+      tgWebApp.enableClosingConfirmation();
+      tgWebApp.requestFullscreen();
     }
 
     const user = tgWebApp?.initDataUnsafe?.user;
@@ -81,10 +80,14 @@ export default function RootLayout({
     if (isClient && user) {
       getUserData();
     }
-  }, [isClient]);
+  }, [isClient, tgWebApp]);
 
   return (
-    <div className="h-screen !pt-[100px] bg-[#ddd]">
+    <div
+      className={`h-screen ${
+        shouldApplyFullscreen() ? '!pt-[100px]' : ''
+      } bg-[#ddd]`}
+    >
       {children}
       <NavBar />
     </div>

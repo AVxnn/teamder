@@ -17,7 +17,7 @@ type User = {
   profile: {
     nickname: string;
     banner: string;
-    cardImage:  string;
+    cardImage: string;
   };
 };
 
@@ -176,7 +176,8 @@ export default function LikesList() {
                   <TDImage
                     src={
                       profile.user?.profile?.cardImage
-                        ? process.env.NEXT_PUBLIC_IMAGE_URL + profile.user?.profile?.cardImage
+                        ? process.env.NEXT_PUBLIC_IMAGE_URL +
+                          profile.user?.profile?.cardImage
                         : '/img/tutorial/tutorial_1.png'
                     }
                     alt="Profile banner"

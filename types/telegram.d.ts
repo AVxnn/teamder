@@ -22,6 +22,18 @@ export interface TelegramWebApp {
   close(): void;
   backgroundColor: string;
   headerColor: string;
+  platform: string;
+  isExpanded: boolean;
+  viewportHeight: number;
+  viewportStableHeight: number;
+  expand(): void;
+  close(): void;
+  disableVerticalSwipes(): void;
+  requestFullscreen(): void;
+  setBackgroundColor(color: string): void;
+  enableClosingConfirmation(): void;
+  disableClosingConfirmation(): void;
+  openTelegramLink(url: string): void;
   BackButton: {
     isVisible: boolean;
     show: () => void;

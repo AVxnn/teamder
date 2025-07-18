@@ -10,7 +10,7 @@ const switchBase =
 const switchChecked = 'bg-[#7C87ED]';
 const switchUnchecked = 'bg-[#363636]';
 const switchThumb =
-  'inline-block w-5 h-5 transform bg-white rounded-full transition-transform';
+  'inline-block w-5 h-5 transform bg-[#7C87ED] rounded-full transition-transform';
 
 export default function SettingsSheet({
   isOpen,
@@ -20,7 +20,6 @@ export default function SettingsSheet({
   onClose: () => void;
 }) {
   const router = useRouter();
-  const [darkTheme, setDarkTheme] = useState(true);
   const [notifications, setNotifications] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -50,7 +49,7 @@ export default function SettingsSheet({
       if (data.success) {
         // Обновляем статус модерации в userStore
         if (userStore.user.profile) {
-          userStore.user.profile.moderationStatus = "deleted";
+          userStore.user.profile.moderationStatus = 'deleted';
         }
       }
 
@@ -76,31 +75,6 @@ export default function SettingsSheet({
               <span>Настройки приложения</span>
             </div>
             <div className="flex flex-col gap-3 !pl-5">
-              <label className="flex items-center justify-between cursor-pointer">
-                <span>Темная тема</span>
-                <span className="leading-0">
-                  <input
-                    type="checkbox"
-                    checked={darkTheme}
-                    onChange={() => setDarkTheme((v) => !v)}
-                    className="sr-only"
-                  />
-                  <span
-                    className={
-                      switchBase +
-                      ' ' +
-                      (darkTheme ? switchChecked : switchUnchecked)
-                    }
-                  >
-                    <span
-                      className={
-                        switchThumb +
-                        (darkTheme ? ' translate-x-5' : ' translate-x-1')
-                      }
-                    />
-                  </span>
-                </span>
-              </label>
               <label className="flex items-center justify-between cursor-pointer">
                 <span>Уведомления</span>
                 <span>

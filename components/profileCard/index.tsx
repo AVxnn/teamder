@@ -56,7 +56,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
-        className="mx-auto outline outline-[#363636] bg-[#ddd] !p-4 text-white rounded-[32px] shadow-2xl"
+        className="mx-auto outline outline-[#363636] bg-[#140A0A] !p-4 text-white rounded-[32px] shadow-2xl"
       >
         <div className="rounded-xl overflow-hidden">
           <TDImage
@@ -74,12 +74,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         <div className="!mt-3 space-y-2">
           <div className="flex justify-between">
             <div className="flex text-sm">
-              <span className="text-[#444] !mr-1">Никнейм: </span>
-              <span>{nickname}</span>
+              <span className="text-[#AFAFAF] !mr-1">Никнейм: </span>
+              <span className="text-white">{nickname}</span>
             </div>
             <div className="flex text-sm">
-              <span className="text-[#444] !mr-1">Рейтинг: </span>
-              <span>{rating}</span>
+              <span className="text-[#AFAFAF] !mr-1">Рейтинг: </span>
+              <span className="text-white">{rating}</span>
             </div>
           </div>
           <div className="!mt-3 text-sm text-[#AFAFAF]">
@@ -91,11 +91,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           <div className="flex justify-between !mt-2">
             <div className="flex flex-col gap-1">
               <span className="text-[12px] text-[#AFAFAF]">Любимые герои:</span>
-              <div className="flex gap-2">
+              <div className="flex -space-x-2">
                 {preferredHeroes?.slice(0, 3).map((hero, index) => (
                   <div
                     key={index}
-                    className="w-8 h-8 rounded-full overflow-hidden outline outline-[#363636]"
+                    className="w-8 h-8 rounded-full overflow-hidden outline outline-[#363636] relative z-10"
+                    style={{ zIndex: 10 - index }}
                   >
                     <TDImage
                       src={hero.image_url}
@@ -114,7 +115,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 {preferredRoles?.map((role, index) => (
                   <span
                     key={index}
-                    className="text-[12px] text-center outline outline-[#363636] text-white !px-2 !py-1 bg-[#140A0A] rounded-full"
+                    className="text-[12px] text-center outline outline-[#363636] text-white !px-2 !py-1 bg-[#1a1a1a] rounded-full"
                   >
                     {DOTA_ROLES[role as DotaRole] || role}
                   </span>
@@ -123,7 +124,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             </div>
             {/* <div className="flex flex-col gap-1">
               <span className="text-[12px] text-[#AFAFAF]">Рейтинг:</span>
-              <span className="text-[16px] w-24 text-center outline outline-[#363636] text-white !px-3 !py-1.5 bg-[#140A0A] rounded-full font-medium">
+              <span className="text-[16px] w-24 text-center outline outline-[#363636] text-white !px-3 !py-1.5 bg-[#1a1a1a] rounded-full font-medium">
                 {rating}
               </span>
             </div> */}

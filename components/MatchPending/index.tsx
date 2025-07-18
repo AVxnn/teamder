@@ -12,7 +12,7 @@ type Props = {
 
 export const MatchPending = ({ userId }: Props) => {
   const router = useRouter();
-  const tgWebApp = useTelegramWebApp();
+  const { webApp: tgWebApp } = useTelegramWebApp();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDislike = async () => {

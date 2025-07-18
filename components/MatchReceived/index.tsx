@@ -13,7 +13,7 @@ type Props = {
 
 export const MatchReceived = ({ userId, onShowSocials }: Props) => {
   const router = useRouter();
-  const tgWebApp = useTelegramWebApp();
+  const { webApp: tgWebApp } = useTelegramWebApp();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDislike = async () => {

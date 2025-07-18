@@ -44,7 +44,9 @@ type ProfileResponse = {
 
 // Добавим функцию для проверки, является ли строка DotaRole
 const isDotaRole = (role: string): role is DotaRole => {
-  return ['CARRY', 'MID', 'OFFLANE', 'SOFT_SUPPORT', 'HARD_SUPPORT'].includes(role);
+  return ['CARRY', 'MID', 'OFFLANE', 'SOFT_SUPPORT', 'HARD_SUPPORT'].includes(
+    role,
+  );
 };
 
 export default function LikesUserPage({
@@ -53,7 +55,7 @@ export default function LikesUserPage({
   params: Promise<{ id: string }>;
 }) {
   const resolvedParams = use(params);
-  const tgWebApp = useTelegramWebApp();
+  const { webApp: tgWebApp } = useTelegramWebApp();
   const router = useRouter();
   const [matchInfo, setMatchInfo] = useState<MatchInfo | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);

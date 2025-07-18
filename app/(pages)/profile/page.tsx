@@ -25,12 +25,12 @@ export default function ProfilePage() {
   const router = useRouter();
   const snap = useSnapshot(userStore);
 
-  const tgWebApp = useTelegramWebApp();
+  const { webApp: tgWebApp } = useTelegramWebApp();
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [newsOpen, setNewsOpen] = useState(false);
   const [showRejectedSheet, setShowRejectedSheet] = useState(false);
-  const [showStatusModeration, setShowStatusModeration] = useState(true);
+  const [showStatusModeration, setShowStatusModeration] = useState(false);
 
   useEffect(() => {
     console.log(tgWebApp);
@@ -50,12 +50,60 @@ export default function ProfilePage() {
   }, [tgWebApp]);
 
   useEffect(() => {
-    const val = localStorage.getItem('showStatusModeration');
-    if (snap.user?.profile?.moderationStatus === 'rejected') {
+    const moderationStatus = snap.user?.profile?.moderationStatus;
+
+    // Проверяем, получен ли профиль вообще
+    if (!snap.user?.profile) {
+      // Если профиль еще не загружен, не делаем ничего
+      return;
+    }
+
+    if (!moderationStatus) {
+      // Если нет статуса модерации, удаляем из localStorage
+      localStorage.removeItem('showStatusModeration');
+      setShowStatusModeration(false);
+      return;
+    }
+
+    if (moderationStatus === 'pending') {
+      // Pending всегда отображается
       setShowStatusModeration(true);
       localStorage.setItem('showStatusModeration', 'true');
-    } else if (!val) setShowStatusModeration(false);
-  }, [snap.user?.profile?.moderationStatus]);
+    } else if (moderationStatus === 'rejected') {
+      // Rejected всегда отображается
+      setShowStatusModeration(true);
+      localStorage.setItem('showStatusModeration', 'true');
+    } else if (moderationStatus === 'approved') {
+      // Approved можно закрыть, проверяем localStorage
+      const savedState = localStorage.getItem('showStatusModeration');
+      if (savedState === null || savedState === 'true') {
+        // Если нет сохраненного состояния или оно true, показываем
+        setShowStatusModeration(true);
+        localStorage.setItem('showStatusModeration', 'true');
+      } else if (savedState === 'false') {
+        // Если сохранено как false, скрываем
+        setShowStatusModeration(false);
+        // НЕ перезаписываем localStorage, оставляем 'false'
+      }
+    } else if (moderationStatus === 'deleted') {
+      // Deleted не показывает статус модерации
+      setShowStatusModeration(false);
+      localStorage.removeItem('showStatusModeration');
+    }
+  }, [snap.user?.profile?.moderationStatus, snap.user?.profile]);
+
+  // Функция для обработки клика по статусу модерации
+  const handleModerationStatusClick = () => {
+    const moderationStatus = snap.user?.profile?.moderationStatus;
+
+    if (moderationStatus === 'rejected') {
+      localStorage.setItem('showStatusModeration', 'false');
+      setShowRejectedSheet(true);
+    } else if (moderationStatus === 'approved') {
+      setShowStatusModeration(false);
+      localStorage.setItem('showStatusModeration', 'false');
+    }
+  };
 
   return (
     <main className="bg-gradient-to-tr flex justify-center from-[#0F0505] to-[#310F0F] h-screen overflow-auto">
@@ -70,32 +118,29 @@ export default function ProfilePage() {
           <h2 className="text-[16px] text-[#ffffff] font-medium !mb-4">
             Ваш профиль
           </h2>
-          {snap.user?.profile?.moderationStatus === 'deleted' ? (
+
+          {/* Отображение статуса модерации */}
+          {snap.user?.profile?.moderationStatus &&
+            showStatusModeration &&
+            snap.user.profile.moderationStatus !== 'deleted' && (
+              <ProfileModerationStatus
+                status={snap.user.profile.moderationStatus}
+                onClick={handleModerationStatusClick}
+              />
+            )}
+
+          {/* Кнопка создания карточки для deleted статуса */}
+          {snap.user?.profile?.moderationStatus === 'deleted' && (
             <Link
               href="/create"
               className="bg-[#140A0A] text-white flex justify-center items-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
             >
               Создать карточку
             </Link>
-          ) : (
-            snap.user?.profile?.moderationStatus &&
-            showStatusModeration && (
-              <ProfileModerationStatus
-                status={snap.user.profile.moderationStatus}
-                onClick={() => {
-                  if (snap.user.profile.moderationStatus === 'rejected') {
-                    localStorage.setItem('showStatusModeration', 'false');
-                    setShowRejectedSheet(true);
-                  }
-                  if (snap.user.profile.moderationStatus === 'approved') {
-                    setShowStatusModeration(false);
-                    localStorage.setItem('showStatusModeration', 'false');
-                  }
-                }}
-              />
-            )
           )}
         </motion.div>
+
+        {/* Отображение карточки профиля только если статус не deleted */}
         {snap.user?.profile?.moderationStatus !== 'deleted' ? (
           <ProfileCard
             isSocial={false}
@@ -113,9 +158,8 @@ export default function ProfilePage() {
             discordUrl={snap.user?.profile?.discordLink}
             steamLink={snap.user?.profile?.steamLink}
           />
-        ) : (
-          <></>
-        )}
+        ) : null}
+
         <ProfileSlider
           likes={
             snap.user?.likesLimit?.dailyLimit -

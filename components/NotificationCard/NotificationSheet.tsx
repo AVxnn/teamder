@@ -11,35 +11,8 @@ export interface Notification {
   subtitle?: string;
   user?: { name: string; avatar: string };
   isRead?: boolean;
+  createdAt?: string; // Дата создания уведомления
 }
-
-// const notifications = [
-//   {
-//     type: 'waiting' as NotificationType,
-//     user: demoUser,
-//     title: 'Ожидает от вас ответа',
-//   },
-//   {
-//     type: 'like' as NotificationType,
-//     user: demoUser,
-//     title: 'Лайкнул вас',
-//   },
-//   {
-//     type: 'superlike' as NotificationType,
-//     user: demoUser,
-//     title: 'Поставил вам суперлайк',
-//   },
-//   {
-//     type: 'moderation-fail' as NotificationType,
-//     title: 'Ваша карточка',
-//     subtitle: 'не прошла модерацию, создайте заново',
-//   },
-//   {
-//     type: 'moderation-success' as NotificationType,
-//     title: 'Ваша карточка',
-//     subtitle: 'прошла модерацию',
-//   },
-// ];
 
 export default function NotificationSheet({
   isOpen,
