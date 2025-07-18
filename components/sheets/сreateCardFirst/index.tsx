@@ -25,12 +25,10 @@ const contentVariants = {
   animate: {
     x: 0,
     opacity: 1,
-    transition: { duration: 0.3, ease: 'easeOut' },
   },
   exit: (direction: 1 | 2) => ({
     x: direction === 1 ? -100 : 100,
     opacity: 0,
-    transition: { duration: 0.3, ease: 'easeIn' },
   }),
 };
 
@@ -76,6 +74,7 @@ export default function CreateCardFirst({
             initial="initial"
             animate="animate"
             exit="exit"
+            transition={{ duration: 0.3, ease: 'easeOut' }}
             className="w-full"
           >
             <div className="space-y-4 flex flex-col gap-2">

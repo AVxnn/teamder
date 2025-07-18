@@ -11,12 +11,10 @@ const contentVariants = {
   animate: {
     x: 0,
     opacity: 1,
-    transition: { duration: 0.3, ease: 'easeOut' },
   },
   exit: (direction: 1 | 2) => ({
     x: direction === 1 ? -100 : 100,
     opacity: 0,
-    transition: { duration: 0.3, ease: 'easeIn' },
   }),
 };
 
@@ -61,6 +59,7 @@ export default function RulesModal({
             initial="initial"
             animate="animate"
             exit="exit"
+            transition={{ duration: 0.3, ease: 'easeOut' }}
           >
             <p className="text-sm text-[#afafaf] !mb-2">
               1. При создании карточки указывайте верные данные, иначе карточка

@@ -50,7 +50,7 @@ export default function UserHeader() {
 
         {/* Правая часть: иконка уведомления */}
         <div
-          className="!p-3 rounded-full outline outline-[#363636] bg-[#140A0A] cursor-pointer"
+          className="flex items-center relative justify-between !px-3 !py-3 bg-[#140A0A] outline outline-[#363636] rounded-[24px] active:scale-105"
           onClick={() => setNotifOpen(true)}
         >
           <Notification />

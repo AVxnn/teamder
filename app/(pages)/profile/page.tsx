@@ -106,7 +106,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <main className="bg-gradient-to-tr flex justify-center from-[#0F0505] to-[#310F0F] h-screen overflow-auto">
+    <main className="flex justify-center overflow-auto">
       <UserHeader />
       <div className="!pt-[84px] !pb-[112px] !px-6 w-full max-w-[560px] overflow-y-scroll">
         <motion.div
@@ -183,20 +183,20 @@ export default function ProfilePage() {
             <NavLink
               href="/tutorial"
               rel="noopener noreferrer"
-              className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
+              className="bg-[#140A0A] flex justify-center rounded-[24px] w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
             >
               <Book />
             </NavLink>
             <div
               rel="noopener noreferrer"
-              className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
+              className="bg-[#140A0A] flex justify-center rounded-[24px] w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
               onClick={() => setNewsOpen(true)}
             >
               <News />
             </div>
             <div
               rel="noopener noreferrer"
-              className="bg-[#140A0A] flex justify-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
+              className="bg-[#140A0A] flex justify-center rounded-[24px] w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
               onClick={() => setSettingsOpen(true)}
             >
               <Settings />
@@ -223,14 +223,14 @@ export default function ProfilePage() {
               <NavLink
                 href="/admin/moderation"
                 rel="noopener noreferrer"
-                className="bg-[#140A0A] flex justify-center text-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
+                className="bg-[#140A0A] flex justify-center text-center rounded-[24px] w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
               >
                 Карточки
               </NavLink>
               <NavLink
                 href="/admin/moderation"
                 rel="noopener noreferrer"
-                className="bg-[#140A0A] flex justify-center text-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
+                className="bg-[#140A0A] flex justify-center text-center rounded-[24px] w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
               >
                 Жалобы
               </NavLink>

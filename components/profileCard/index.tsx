@@ -95,7 +95,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 {preferredHeroes?.slice(0, 3).map((hero, index) => (
                   <div
                     key={index}
-                    className="w-8 h-8 rounded-full overflow-hidden outline outline-[#363636] relative z-10"
+                    className="w-8 h-8 rounded-[24px] overflow-hidden outline outline-[#363636] relative z-10"
                     style={{ zIndex: 10 - index }}
                   >
                     <TDImage
@@ -115,7 +115,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 {preferredRoles?.map((role, index) => (
                   <span
                     key={index}
-                    className="text-[12px] text-center outline outline-[#363636] text-white !px-2 !py-1 bg-[#1a1a1a] rounded-full"
+                    className="text-[12px] text-center outline outline-[#363636] text-white !px-2 !py-1 bg-[#1a1a1a] rounded-[24px]"
                   >
                     {DOTA_ROLES[role as DotaRole] || role}
                   </span>

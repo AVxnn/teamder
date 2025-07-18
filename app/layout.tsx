@@ -4,6 +4,7 @@ import Script from 'next/script';
 
 import { Urbanist, Montserrat } from 'next/font/google';
 import TelegramFullscreen from '@/components/TelegramFullscreen';
+import NotificationProvider from '@/components/providers/NotificationProvider';
 import 'react-spring-bottom-sheet/dist/style.css';
 
 const urbanist = Urbanist({
@@ -39,8 +40,10 @@ export default function RootLayout({
       <body
         className={`${urbanist.variable} ${montserrat.variable} antialiased`}
       >
-        <TelegramFullscreen />
-        {children}
+        <NotificationProvider>
+          <TelegramFullscreen />
+          {children}
+        </NotificationProvider>
         <Script
           src="https://telegram.org/js/telegram-web-app.js"
           strategy="beforeInteractive"

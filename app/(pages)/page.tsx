@@ -90,9 +90,9 @@ export default function HomePage() {
   }
 
   return (
-    <main className="bg-gradient-to-tr flex justify-center from-[#0F0505] to-[#310F0F] h-screen overflow-auto">
+    <main className="flex justify-center overflow-auto">
       <TeamderHeader onToggleFilters={() => setShowFilters(!showFilters)} />
-      <div className="!pt-[84px] !pb-[112px] !px-6 w-full max-w-[560px] flex justify-center overflow-y-scroll">
+      <div className="!pt-[84px] !px-6 w-full max-w-[560px] flex justify-center overflow-y-scroll">
         <SwipeableCardStack
           showFilters={showFilters}
           onFiltersChange={setFilters}

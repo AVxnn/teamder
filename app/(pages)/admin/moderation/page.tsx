@@ -116,7 +116,7 @@ export default function ModerationPage() {
   if (error) return <div className="text-red-500 !p-8">{error}</div>;
 
   return (
-    <div className="bg-gradient-to-tr from-[#0F0505] to-[#310F0F] h-screen overflow-hidden relative">
+    <div className="overflow-hidden relative">
       <UserHeader />
       <div className="!px-6 !pt-[84px]">
         <h1 className="text-[16px] text-[#ffffff] font-medium !mb-4">
@@ -125,7 +125,7 @@ export default function ModerationPage() {
         {profiles.length === 0 && (
           <div className="text-gray-400">Нет карточек на модерацию</div>
         )}
-        <div className="flex flex-col gap-4 overflow-auto h-[calc(100vh-120px)] !pb-[110px]">
+        <div className="flex flex-col gap-4 overflow-auto !pb-[110px]">
           {profiles.map((profile) => (
             <div
               key={profile.telegramId}
@@ -170,7 +170,7 @@ export default function ModerationPage() {
               {/* Кнопки модерации */}
               <div className="flex gap-2">
                 <button
-                  className="flex-1 bg-[#140A0A] text-white flex justify-center text-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
+                  className="flex-1 bg-[#140A0A] text-white flex justify-center text-center rounded-[24px] w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
                   disabled={moderating === profile.telegramId}
                   onClick={() => handleModeration(profile.telegramId, false)}
                 >
@@ -179,7 +179,7 @@ export default function ModerationPage() {
                     : 'Отклонить'}
                 </button>
                 <button
-                  className="flex-1 bg-[#7C87ED] text-white justify-center text-center rounded-full w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
+                  className="flex-1 bg-[#7C87ED] text-white justify-center text-center rounded-[24px] w-full !p-3 outline outline-[#363636] hover:scale-105 active:scale-105 transition-transform cursor-pointer"
                   disabled={moderating === profile.telegramId}
                   onClick={() => handleModeration(profile.telegramId, true)}
                 >

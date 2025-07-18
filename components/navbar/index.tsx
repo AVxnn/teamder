@@ -32,7 +32,7 @@ const NavBar = () => {
       initial={{ opacity: 0, x: 0 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.2, delay: 0 }}
-      className="flex gap-[8px] bottom-[100px] !p-[5px] left-1/2 transform -translate-x-1/2 backdrop-blur-md bg-transparent/30 z-10 w-[224px] h-[64px] rounded-full relative z-10"
+      className="fixed bottom-6 left-1/2 transform -translate-x-1/2 flex gap-[8px] !p-[5px] backdrop-blur-md bg-transparent/30 z-50 w-[224px] h-[64px] rounded-full"
     >
       <NavLink
         href="/likes"

@@ -139,7 +139,7 @@ export default function LikesUserPage({
 
   if (loading) {
     return (
-      <main className="bg-gradient-to-tr flex justify-center from-[#0F0505] to-[#310F0F] h-screen overflow-auto">
+      <main className="flex justify-center overflow-auto">
         <TeamderHeader />
         <div className="!pt-[84px] !pb-[112px] !px-6 w-full max-w-[560px] overflow-y-scroll">
           <div className="text-white text-center">Загрузка...</div>
@@ -150,7 +150,7 @@ export default function LikesUserPage({
 
   if (error || !userProfile) {
     return (
-      <main className="bg-gradient-to-tr flex justify-center from-[#0F0505] to-[#310F0F] h-screen overflow-auto">
+      <main className="flex justify-center overflow-auto">
         <TeamderHeader />
         <div className="!pt-[84px] !pb-[112px] !px-6 w-full max-w-[560px] overflow-y-scroll">
           <div className="text-red-500 text-center">
@@ -162,7 +162,7 @@ export default function LikesUserPage({
   }
 
   return (
-    <main className="bg-gradient-to-tr flex justify-center from-[#0F0505] to-[#310F0F] h-screen overflow-auto">
+    <main className="flex justify-center overflow-auto">
       <TeamderHeader />
       <div className="!pt-[84px] !pb-[112px] !px-6 w-full max-w-[560px] overflow-y-scroll">
         <ProfileCard

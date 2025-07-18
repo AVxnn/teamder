@@ -1,6 +1,5 @@
 'use client';
 
-import NavBar from '@/components/navbar';
 import useTelegramWebApp from '@/hooks/useTelegramWebApp';
 import { userStore } from '@/store/user';
 import { useEffect, useState } from 'react';
@@ -99,7 +98,6 @@ export default function RootLayout({
       } bg-[#ddd] pb-24`}
     >
       {children}
-      <NavBar />
     </div>
   );
 }

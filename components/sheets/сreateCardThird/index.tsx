@@ -28,14 +28,12 @@ const contentVariants = {
     opacity: 1,
     position: 'relative' as const,
     width: '100%',
-    transition: { duration: 0.3, ease: 'easeOut' },
   },
   exit: (direction: 1 | 2) => ({
     x: direction === 1 ? -100 : 100,
     opacity: 0,
     position: 'absolute' as const,
     width: '100%',
-    transition: { duration: 0.3, ease: 'easeIn' },
   }),
 };
 
@@ -81,6 +79,7 @@ const CreateCardThird: FC<Props> = ({
             initial="initial"
             animate="animate"
             exit="exit"
+            transition={{ duration: 0.3, ease: 'easeOut' }}
           >
             <div className="flex gap-2 w-full !mb-2 !mt-2">
               <Input

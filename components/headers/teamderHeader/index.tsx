@@ -38,7 +38,7 @@ const TeamderHeader = ({ onToggleFilters }: TeamderHeaderProps) => {
         {/* Кнопка фильтров */}
         <button
           onClick={onToggleFilters}
-          className="!p-3 rounded-full outline outline-[#363636] bg-[#140A0A] text-white hover:bg-[#2a2a2a] transition-colors"
+          className="!p-3 rounded-[24px] outline outline-[#363636] bg-[#140A0A] text-white hover:bg-[#2a2a2a] transition-colors"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -57,7 +57,7 @@ const TeamderHeader = ({ onToggleFilters }: TeamderHeaderProps) => {
         </button>
 
         {/* Кнопка уведомлений */}
-        <div className="!p-3 rounded-full outline outline-[#363636] bg-[#140A0A]">
+        <div className="!p-3 rounded-[24px] outline outline-[#363636] bg-[#140A0A]">
           <Notification />
           {/* Можно добавить badge для уведомлений */}
           {/* <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span> */}

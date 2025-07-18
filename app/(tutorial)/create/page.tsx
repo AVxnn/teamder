@@ -11,6 +11,7 @@ import TDImage from '@/components/UI/TDImage';
 import CreateCardSecond from '@/components/sheets/сreateCardSecond';
 import сreateCardThird from '@/components/sheets/сreateCardThird';
 import { useRouter } from 'next/navigation';
+import { useSnackbar } from 'notistack';
 
 const steps = ['rules', 'step1', 'step2', 'step3', 'preview'] as const;
 type Step = (typeof steps)[number];
@@ -27,6 +28,90 @@ type FormData = {
   discordLink: string;
   steamLink: string;
   cardImage: string;
+};
+
+// Validation functions
+const validateStep1 = (formData: FormData): string[] => {
+  const errors: string[] = [];
+
+  if (!formData.nickname.trim()) {
+    errors.push('Никнейм обязателен');
+  } else if (formData.nickname.trim().length < 2) {
+    errors.push('Никнейм должен содержать минимум 2 символа');
+  } else if (formData.nickname.trim().length > 20) {
+    errors.push('Никнейм не должен превышать 20 символов');
+  }
+
+  if (!formData.about.trim()) {
+    errors.push('Расскажите о себе');
+  } else if (formData.about.trim().length < 10) {
+    errors.push('Описание должно содержать минимум 10 символов');
+  } else if (formData.about.trim().length > 500) {
+    errors.push('Описание не должно превышать 500 символов');
+  }
+
+  if (!formData.lookingFor.trim()) {
+    errors.push('Укажите кого вы ищите');
+  } else if (formData.lookingFor.trim().length < 10) {
+    errors.push('Описание должно содержать минимум 10 символов');
+  } else if (formData.lookingFor.trim().length > 500) {
+    errors.push('Описание не должно превышать 500 символов');
+  }
+
+  return errors;
+};
+
+const validateStep2 = (formData: FormData): string[] => {
+  const errors: string[] = [];
+
+  if (!formData.steamId.trim()) {
+    errors.push('SteamID обязателен');
+  } else if (!/^\d{17}$/.test(formData.steamId.trim())) {
+    errors.push('SteamID должен содержать 17 цифр');
+  }
+
+  if (!formData.rating || formData.rating < 1) {
+    errors.push('Рейтинг обязателен');
+  } else if (formData.rating < 1 || formData.rating > 10000) {
+    errors.push('Рейтинг должен быть от 1 до 10000');
+  }
+
+  if (!formData.preferredRoles || formData.preferredRoles.length === 0) {
+    errors.push('Выберите хотя бы одну роль');
+  } else if (formData.preferredRoles.length > 3) {
+    errors.push('Можно выбрать максимум 3 роли');
+  }
+
+  if (!formData.preferredHeroes || formData.preferredHeroes.length === 0) {
+    errors.push('Выберите хотя бы одного героя');
+  } else if (formData.preferredHeroes.length > 3) {
+    errors.push('Можно выбрать максимум 3 героев');
+  }
+
+  return errors;
+};
+
+const validateStep3 = (formData: FormData): string[] => {
+  const errors: string[] = [];
+
+  if (!formData.discordLink.trim()) {
+    errors.push('Ссылка на Discord обязательна');
+  }
+  // } else if (
+  //   !formData.discordLink.includes('discord.gg/') &&
+  //   !formData.discordLink.includes('discord.com/invite/')
+  // ) {
+  //   errors.push('Введите корректную ссылку на Discord');
+  // }
+
+  if (!formData.steamLink.trim()) {
+    errors.push('Ссылка на Steam обязательна');
+  }
+  // } else if (!formData.steamLink.includes('steamcommunity.com/')) {
+  //   errors.push('Введите корректную ссылку на Steam');
+  // }
+
+  return errors;
 };
 
 // Конфигурация анимации для изображений
@@ -48,6 +133,7 @@ const imageVariants = {
 export default function CreateCardPage() {
   const snap = useSnapshot(userStore);
   const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
   const [step, setStep] = useState<Step>('rules');
   const [direction, setDirection] = useState(1); // 1 - вперед, -1 - назад
 
@@ -68,7 +154,40 @@ export default function CreateCardPage() {
   const handleChange = (field: keyof FormData, value: string | string[]) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
+
+  const validateCurrentStep = (): boolean => {
+    let stepErrors: string[] = [];
+
+    switch (step) {
+      case 'step1':
+        stepErrors = validateStep1(formData);
+        break;
+      case 'step2':
+        stepErrors = validateStep2(formData);
+        break;
+      case 'step3':
+        stepErrors = validateStep3(formData);
+        break;
+      default:
+        return true;
+    }
+
+    if (stepErrors.length > 0) {
+      stepErrors.forEach((error) => {
+        enqueueSnackbar(error, { variant: 'error' });
+      });
+      return false;
+    }
+
+    return true;
+  };
+
   const nextStep = async () => {
+    // Validate current step before proceeding
+    if (!validateCurrentStep()) {
+      return;
+    }
+
     setDirection(1); // Устанавливаем направление вперед
     const currentIndex = steps.indexOf(step);
 
@@ -89,14 +208,21 @@ export default function CreateCardPage() {
           if (data.success) {
             console.log('✅ Карточка создана');
             userStore.user.profile = data.profile;
+            enqueueSnackbar('Карточка успешно создана!', {
+              variant: 'success',
+            });
             router.push('/');
           } else {
             console.error('⚠️ Ошибка создания:', data.error);
+            enqueueSnackbar('Ошибка при создании карточки', {
+              variant: 'error',
+            });
             router.push('/');
           }
         }
       } catch (err) {
         console.error('❌ Ошибка при запросе:', err);
+        enqueueSnackbar('Ошибка при создании карточки', { variant: 'error' });
         router.push('/');
       }
       return;
